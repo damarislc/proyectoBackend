@@ -1,13 +1,14 @@
 [
   {
     "id": 1,
-    "title": "Pintura Berel amarillo",
-    "description": "Pintura amarillo mate, 25L",
+    "title": "Pintura Berel Blanco",
+    "description": "Pintura blanco mate, 25L",
     "code": "X0A21232",
     "price": 1500,
     "status": true,
     "stock": 5,
-    "category": "Pintura"
+    "category": "Pintura",
+    "thumbnail": ["/public/images/imagen1.jpg", "/public/images/imagen2.jpg"]
   },
   {
     "id": 2,

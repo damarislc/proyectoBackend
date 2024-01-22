@@ -1,15 +1,13 @@
 import express from "express";
 import path from "path";
-import { fileURLToPath } from "url";
+import __dirname from "../utils.js";
 import ProductManager from "../models/productManager.js";
 
 //Inicializando el router
 const router = express.Router();
-//Variables para obtener el directorio
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
 //Path de la "base de datos" (json) de productos
-const productsdb = path.join(__dirname, "../db", "products.json");
+const productsdb = path.join(__dirname, "/db", "products.json");
 const productManager = new ProductManager(productsdb);
 
 //****Endpoints*****
@@ -59,7 +57,8 @@ router.get("/api/products", (req, res) => {
 
 /**
  * Get que devuelve el producto con el id solicitado.
- * Modo de ejecucion: http://localhost:8080/products/1
+ * Recibe como parámetro el id del producto
+ * Modo de ejecucion: http://localhost:8080/products/:pid
  */
 router.get("/api/products/:pid", (req, res) => {
   //Obtiene el id desde el parametro del request
@@ -97,7 +96,7 @@ router.get("/api/products/:pid", (req, res) => {
     "status": true,
     "stock": 10,
     "category": "Herramientas para pintar",
-    "thumbnail": "Mi imagen"
+    "thumbnail": ["url1", "url2"]
    }
    Todos los campos son requeridos excepto thumnail y status,
    status si no es incluido por default se le asignará true.
@@ -117,7 +116,7 @@ router.post("/api/products", (req, res) => {
 
 /**
  * Put para actualizar un producto.
- * Modo de ejecución: http://localhost:8080/api/products/1
+ * Modo de ejecución: http://localhost:8080/api/products/:pid
  * no se requiere mandar todos los campos, solo los que se van a actualizar.
  * Si se manda el codigo y no es el mismo y se está repitiendo el código de otro producto,
  * mandará mensaje de error y no se actualizará.
@@ -146,7 +145,7 @@ router.put("/api/products/:pid", (req, res) => {
 
 /**
  * Delete para borrar un producto.
- * Modo de ejecución: http://localhost:8080/api/products/1
+ * Modo de ejecución: http://localhost:8080/api/products/:pid
  */
 router.delete("/api/products/:pid", (req, res) => {
   //Obtiene el id el producto que se desea eliminar

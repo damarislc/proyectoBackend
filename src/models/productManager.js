@@ -1,5 +1,9 @@
 import fs from "fs";
 
+/**
+ * Clase ProductManager, se utiliza para crear y obtener los productos en el JSON.
+ * Recibe como parametro en el constructor el path de la ruta del archivo JSON.
+ */
 export default class ProductManager {
   constructor(path) {
     this.path = path;
