@@ -175,3 +175,23 @@ http://localhost:8080/
 ```
 
 Los mensajes serán almacenados en la base de datos en la colección messages y contendrá un campo user con el email del usuario y el campo message con el mensaje enviado.
+
+## Vistas
+
+Contiene con 1 vista para productos y otra para el carrito. Actualmente la vista del carrito está hardcodeada para un cart id en específico.
+
+### Vista de productos
+
+La página de productos lista por defecto los 10 primeros productos.
+![Listado de productos](https://res.cloudinary.com/doxztm7ed/image/upload/v1708967949/Backend/Readme/14_eycu9j.png)
+
+Cuenta con un páginado para ver los siguientes productos
+![Paginado](https://res.cloudinary.com/doxztm7ed/image/upload/v1708967949/Backend/Readme/15_gxtmmf.png)
+
+Al añadir un producto, sale un alert avisando que se ha añadido el producto.
+![Alert](https://res.cloudinary.com/doxztm7ed/image/upload/v1708967949/Backend/Readme/16_xqjfzj.png)
+
+### Vista de carrito
+
+La página de carrito está hardcodeada para el carrito con el id _65dbf04b8e58e8e94a3e2844_. Esta contiene una tabla con los productos añadidos al carrito.
+![Carrito](https://res.cloudinary.com/doxztm7ed/image/upload/v1708967949/Backend/Readme/17_pgoted.png)
