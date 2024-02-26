@@ -65,9 +65,23 @@ export default class ProductManager {
    * Método getProducts para obtener el arreglo de todos los productos desde la BD
    * @returns la promesa de los productos.
    */
-  async getProducts() {
+  async getProducts(params) {
+    //Se crea el filtro con base a los parametros mandados (si es que se mando alguno)
+    const filter = {};
+    if (params.status) filter.status = params.status;
+    if (params.category) filter.category = params.category;
+    //se crea el objeto con las options para el paginate
+    const options = {
+      limit: params.limit,
+      page: params.page,
+      lean: true,
+    };
+    //si el parametro sort contiene un valor, se le asigna al options
+    if (params.sort) options.sort = { price: params.sort };
+
     try {
-      return await productModel.find();
+      //se llama al método paginate con los filtros y options
+      return await productModel.paginate(filter, options);
     } catch (error) {
       console.error("Error al leer la base de datos.", error);
       return Promise.reject("Error al leer la base de datos, " + error);
@@ -82,8 +96,11 @@ export default class ProductManager {
    */
   async getProductById(id) {
     try {
+      console.log(id);
+      let result = await productModel.findById({ _id: id });
+      console.log(result);
       //Busca en la colección el producto que coincida con el id
-      return await productModel.findById({ _id: id });
+      return result;
     } catch (error) {
       console.error("Error al leer la base de datos.", error);
       return Promise.reject("Error al leer la base de datos, " + error);
@@ -94,16 +111,19 @@ export default class ProductManager {
    * Método para actualizar un producto
    * @param {*} id el id del producto a actualizar
    * @param {*} productUpdated el producto con el/los campos modificados
-   * @returns Promise, el resultado de la actualización o la promesa rechazada
-   *          con el mensaje de error
+   * @returns un arreglo con el producto antes de modificar y despues de modificar.
    */
   async updateProduct(id, productUpdated) {
     try {
       //busca el producto a actualizar y modificado solo los campos enviados en productUpdated
-      return await productModel.findOneAndUpdate(
+      const productBefore = await productModel.findOneAndUpdate(
         { _id: id },
         { $set: productUpdated }
       );
+
+      const productAfter = await productModel.findById({ _id: id });
+      const producs = [productBefore, productAfter];
+      return producs;
     } catch (error) {
       console.error("Error al actualizar el producto", error);
       return Promise.reject("Error al actualizar el producto, " + error);

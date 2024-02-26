@@ -1,4 +1,4 @@
-import express from "express";
+import express, { query } from "express";
 import ProductManager from "../dao/productManager.js";
 
 const router = express.Router();
@@ -7,12 +7,51 @@ const productManager = new ProductManager();
 
 //Obtener todos los productos
 router.get("/", (req, res) => {
+  //se obtiene los parametros
+  let limit = parseInt(req.query.limit);
+  let page = parseInt(req.query.page);
+  let sort = parseInt(req.query.sort);
+  let status = req.query.status;
+  let category = req.query.category;
+  //se asigna un limite por default
+  limit = limit ? limit : 10;
+  //se asigna una pagina por default
+  page = page ? page : 1;
+  if (sort) sort = sort == -1 ? "desc" : "asc";
+
+  //se guardan los parametros en un objeto
+  const params = {
+    limit,
+    page,
+    sort,
+    status,
+    category,
+  };
+
   //Llama el método getProducts
   //si la promesa es exitosa manda el resultado
   //sino manda un mensaje de error
   productManager
-    .getProducts()
-    .then((products) => res.send({ result: "sucess", payload: products }))
+    .getProducts(params)
+    .then((products) => {
+      //se manda el respond con las propiedades del paginate
+      res.send({
+        status: "success",
+        payload: products.docs,
+        totalPages: products.totalPages,
+        prevPage: products.prevPage,
+        nextPage: products.nextPage,
+        page: products.page,
+        hasPrevPage: products.hasPrevPage,
+        hasNextPage: products.hasNextPage,
+        prevLink: products.hasPrevPage
+          ? `/products?page=${products.prevPage}`
+          : null,
+        nextLink: products.hasNextPage
+          ? `/products?page=${products.nextPage}`
+          : null,
+      });
+    })
     .catch((error) =>
       res.send({
         status: "error",
@@ -31,13 +70,14 @@ router.get("/:pid", (req, res) => {
   productManager
     .getProductById(pid)
     .then((product) => {
-      if (result) {
-        res.send({ result: "sucess", payload: product });
+      if (product) {
+        res.send({ status: "success", payload: product });
+      } else {
+        res.send({
+          status: "error",
+          error: `El producto con el id ${pid} no existe.`,
+        });
       }
-      res.send({
-        result: "error",
-        error: `El producto con el id ${pid} no existe.`,
-      });
     })
     .catch((error) =>
       res.send({
@@ -56,7 +96,7 @@ router.post("/", (req, res) => {
   //sino manda un mensaje de error
   productManager
     .addProduct(product)
-    .then((result) => res.send({ result: "sucess", payload: result }))
+    .then((result) => res.send({ status: "success", payload: result }))
     .catch((error) =>
       res.send({
         status: "error",
@@ -77,12 +117,16 @@ router.put("/:pid", (req, res) => {
     .updateProduct(pid, product)
     .then((result) => {
       if (result) {
-        res.send({ result: "sucess", payload: result });
+        res.send({
+          status: "success",
+          payload: { before: result[0], after: result[1] },
+        });
+      } else {
+        res.send({
+          status: "error",
+          error: `El producto con el id ${pid} no existe.`,
+        });
       }
-      res.send({
-        result: "error",
-        error: `El producto con el id ${pid} no existe.`,
-      });
     })
     .catch((error) =>
       res.send({
@@ -101,7 +145,7 @@ router.delete("/:pid", async (req, res) => {
   //sino manda un mensaje de error
   productManager
     .deleteProduct(pid)
-    .then((result) => res.send({ result: "sucess", payload: result }))
+    .then((result) => res.send({ status: "success", payload: result }))
     .catch((error) =>
       res.send({
         status: "error",

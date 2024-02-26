@@ -8,16 +8,19 @@ const cartsCollection = "carts";
  * y un quantity
  */
 const cartSchema = new mongoose.Schema({
-  products: [
-    {
-      id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "products",
-        required: true,
+  products: {
+    type: [
+      {
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "products",
+          required: true,
+        },
+        quantity: { type: Number, integer: true, required: true },
       },
-      quantity: { type: Number, required: true, integer: true },
-    },
-  ],
+    ],
+    default: [],
+  },
 });
 
 const cartModel = mongoose.model(cartsCollection, cartSchema);
