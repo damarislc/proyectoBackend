@@ -3,12 +3,26 @@ import express from "express";
 const router = express.Router();
 
 //Renderea la página del chat
-router.get("/", (req, res) => {
+router.get("/chat", (req, res) => {
   res.render("chat", { title: "Chat" });
+});
+
+//Renderea la pagina de login
+router.get("/login", (req, res) => {
+  res.render("login", { title: "Login" });
+});
+
+//Renderea la pagina de registro
+router.get("/register", (req, res) => {
+  res.render("register", { title: "Registro" });
 });
 
 //Obtiene los productos desde un fetch de la api de products
 router.get("/products", (req, res) => {
+  if (!req.session?.user) {
+    return res.redirect("/login");
+  }
+  const user = req.session.user;
   /** Se obtiene los parametros del request
    * por el momento el frontEnd solo utiliza limit y page.
    */
@@ -47,6 +61,7 @@ router.get("/products", (req, res) => {
         res.render("products", {
           data,
           title: "Listado de productos",
+          user,
         });
       } else {
         //sino, se manda que hubo un error en el servidor

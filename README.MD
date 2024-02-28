@@ -178,12 +178,58 @@ Los mensajes serán almacenados en la base de datos en la colección messages y 
 
 ## Vistas
 
-Contiene con 1 vista para productos y otra para el carrito. Actualmente la vista del carrito está hardcodeada para un cart id en específico.
+La página cuenta con las siguientes vistas:
+
+- Registro
+- Login
+- Productos
+- Carrito
+- Chat
+
+Actualmente la vista del carrito está hardcodeada para un cart id en específico.
+
+### Vista de registro
+
+```bash
+http://localhost:8080/register
+```
+
+La vista de registro cuenta con un formulario con nombre, apellido, email y contraseña. Todos los campos son obligatorios.
+
+![Vista de registro](https://res.cloudinary.com/doxztm7ed/image/upload/v1709159230/Backend/Readme/18_caw0cx.png)
+
+Al crear un usuario nuevo enseña un mensaje para preguntar si se quiere ir a la pagina de login o registrar otro usuario.
+
+![Mensaje](https://res.cloudinary.com/doxztm7ed/image/upload/v1709159416/Backend/Readme/19_eriaaa.png)
+
+### Vista de login
+
+```bash
+http://localhost:8080/login
+```
+
+La vista de login cuenta con un formulario con email y contraseñ. Ademas contiene un link para ir a la pagina de registro por si deseas registrarte.
+
+Actualmente ya se encuentra en la BD el usuario adminstrador de adminCoder.
+
+![Vista de login](https://res.cloudinary.com/doxztm7ed/image/upload/v1709159588/Backend/Readme/20_f0auew.png)
 
 ### Vista de productos
 
+```bash
+http://localhost:8080/products
+```
+
+El header de la vista de productos contiene un mensaje de bienvenida del usuario y si este es admin se añade el mensaje "Soy Admin.
+
+![Header de productos](https://res.cloudinary.com/doxztm7ed/image/upload/v1709159707/Backend/Readme/21_dleojv.png)
+
+Tambien cuenta con un boton para hacer logout y para ir a la vista de carrito.
+
+![Botones header](https://res.cloudinary.com/doxztm7ed/image/upload/v1709159772/Backend/Readme/22_hslcdi.png)
+
 La página de productos lista por defecto los 10 primeros productos.
-![Listado de productos](https://res.cloudinary.com/doxztm7ed/image/upload/v1708967949/Backend/Readme/14_eycu9j.png)
+![Listado de productos](https://res.cloudinary.com/doxztm7ed/image/upload/v1709159878/Backend/Readme/14_lnjcsu.png)
 
 Cuenta con un páginado para ver los siguientes productos
 ![Paginado](https://res.cloudinary.com/doxztm7ed/image/upload/v1708967949/Backend/Readme/15_gxtmmf.png)

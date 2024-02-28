@@ -1,6 +1,19 @@
 <div id="products-header">
-  <div class="div-cart-btn"><button class="view-cart" onclick="gotoCart()">Ir al
-      carrito</button></div>
+  <div class="first-row">
+
+    <div class="right">
+      <div class="div-cart-btn"><button
+          class="view-cart"
+          onclick="gotoCart()"
+        >Ir al carrito</button></div>
+      <div id="div-logout">
+        <button onclick="logout()" class="logout">Logout</button>
+      </div>
+    </div>
+  </div>
+  <p class="welcome">Bienvenido a la tienda
+    {{user.name}}!
+    {{#if user.admin}}Soy Admin{{/if}}</p>
   <div class="div-title"><h1>Listado de productos</h1></div>
 </div>
 <div id="products">
@@ -52,5 +65,4 @@
           ></path></svg></a></button>
   {{/if}}
 </div>
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/products.js"></script>
