@@ -1,6 +1,5 @@
 import express from "express";
 import userModel from "../dao/models/user.model.js";
-import { adminUsers } from "../config/config.js";
 
 const router = express.Router();
 
@@ -49,8 +48,22 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    //busa el usuario que coincida con el email y contraseña
-    const user = await userModel.findOne({ email, password });
+    //valor booleano para poderlo usar mas facilmente en handlebars
+    let isAdmin = false;
+    let user;
+    if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
+      isAdmin = true;
+      user = {
+        name: "Coder",
+        lastname: "House",
+        email: "adminCoder@coder.com",
+        role: "admin",
+        admin: isAdmin,
+      };
+    } else {
+      //busa el usuario que coincida con el email y contraseña
+      user = await userModel.findOne({ email, password });
+    }
     //si el usuario no existe se manda mensaje de error
     if (!user) {
       return res.status(401).send({
@@ -60,8 +73,6 @@ router.post("/login", async (req, res) => {
     }
 
     //Valida si el role es admin para añadir un booleano para usarlo en handlebars
-    let isAdmin = false;
-    if (user.role === "admin") isAdmin = true;
 
     //crea un usuario en la sesion
     req.session.user = {

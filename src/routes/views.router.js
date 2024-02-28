@@ -2,6 +2,11 @@ import express from "express";
 
 const router = express.Router();
 
+//Por defecto mandar a login
+router.get("/", (req, res) => {
+  res.redirect("/login");
+});
+
 //Renderea la página del chat
 router.get("/chat", (req, res) => {
   res.render("chat", { title: "Chat" });
