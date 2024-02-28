@@ -208,9 +208,7 @@ Al crear un usuario nuevo enseña un mensaje para preguntar si se quiere ir a la
 http://localhost:8080/login
 ```
 
-La vista de login cuenta con un formulario con email y contraseñ. Ademas contiene un link para ir a la pagina de registro por si deseas registrarte.
-
-Actualmente ya se encuentra en la BD el usuario adminstrador de adminCoder.
+La vista de login cuenta con un formulario con email y contraseña. Ademas contiene un link para ir a la pagina de registro por si deseas registrarte.
 
 ![Vista de login](https://res.cloudinary.com/doxztm7ed/image/upload/v1709159588/Backend/Readme/20_f0auew.png)
 
