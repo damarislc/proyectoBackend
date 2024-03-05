@@ -22,8 +22,6 @@ router.post("/register", async (req, res) => {
 
     //se asigna el rol de usuario por default
     let role = "user";
-    //busca si el email esta dentro de los usuarios admin y de ser asi, cambia el rol del usuario
-    if (adminUsers.includes(email)) role = "admin";
 
     //crea un nuevo usuario dentro de la base de datos
     await userModel.create({ name, lastname, email, password, role });
