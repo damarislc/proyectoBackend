@@ -2,9 +2,9 @@ import express from "express";
 
 const router = express.Router();
 
-//Por defecto mandar a login
+//Por defecto mandar a products
 router.get("/", (req, res) => {
-  res.redirect("/login");
+  res.redirect("/products");
 });
 
 //Renderea la página del chat
