@@ -12,7 +12,7 @@ form.addEventListener("submit", (event) => {
   data.forEach((value, key) => (obj[key] = value));
 
   //hace un fetch a la api de login con la informacion introducida por el usuario
-  fetch("/api/session/login", {
+  fetch("/api/sessions/login", {
     method: "POST",
     body: JSON.stringify(obj),
     headers: {
@@ -22,7 +22,7 @@ form.addEventListener("submit", (event) => {
     .then((response) => response.json())
     .then((result) => {
       //si el resultario es exitoso redirige la pagina a productos
-      if (result.status === "success") window.location.href = "/products";
+      if (result.success) window.location.href = "/api/sessions/current";
       else {
         //sino, manda un mensaje de error
         Swal.fire({

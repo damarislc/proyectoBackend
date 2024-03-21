@@ -12,7 +12,7 @@ form.addEventListener("submit", (event) => {
   data.forEach((value, key) => (obj[key] = value));
 
   //hace un fetch a la api de register con la informacion introducida por el usuario
-  fetch("/api/session/register", {
+  fetch("/api/sessions/register", {
     method: "POST",
     body: JSON.stringify(obj),
     headers: {
@@ -22,7 +22,7 @@ form.addEventListener("submit", (event) => {
     .then((res) => res.json())
     .then((result) => {
       //si es exitoso muestra un mensaje preguntando si quiere ir a la pagina de login o registrar otro usuario
-      if (result.status === "success") {
+      if (result.success) {
         Swal.fire({
           title: "Usuario creado exitosamente",
           icon: "success",
