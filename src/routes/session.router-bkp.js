@@ -6,7 +6,7 @@ const router = express.Router();
 //Ruta para guardar el usuario que se quiere registrar
 router.post("/register", async (req, res) => {
   //Recibe el contenido del form
-  const { name, lastname, email, password } = req.body;
+  const { name, lastname, age, email, password } = req.body;
 
   try {
     //Busca si el email ya se ha registrado anteriormente
