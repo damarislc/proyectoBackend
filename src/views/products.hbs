@@ -3,17 +3,21 @@
 
     <div class="right">
       <div class="div-cart-btn"><button
-          class="view-cart"
-          onclick="gotoCart()"
+          class="green-btn"
+          onclick="gotoCart('{{user.cart}}')"
         >Ir al carrito</button></div>
+      <div class="div-perfil-btn">
+        <a href="/current"><button class="green-btn">Ir a perfil</button></a>
+      </div>
       <div id="div-logout">
         <button onclick="logout()" class="logout">Logout</button>
       </div>
     </div>
   </div>
   <p class="welcome">Bienvenido a la tienda
-    {{user.name}}!
-    {{#if user.admin}}Soy Admin.{{else}}Soy Usuario.{{/if}}</p>
+    {{user.name}}! Soy
+    {{user.role}}</p>
+  <p>Mi carrito id es: <span id="cartId">{{user.cart}}</span></p>
   <div class="div-title"><h1>Listado de productos</h1></div>
 </div>
 <div id="products">

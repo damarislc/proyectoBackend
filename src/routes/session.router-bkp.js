@@ -14,7 +14,6 @@ router.post("/register", async (req, res) => {
 
     //si el usuario ya existe, se manda un mensaje de error
     if (user) {
-      console.log("se encontro un usuario");
       return res
         .status(401)
         .send({ status: "error", message: "El email ya existe" });

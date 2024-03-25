@@ -182,11 +182,11 @@ La página cuenta con las siguientes vistas:
 
 - Registro
 - Login
+- Restaurar contraseña
+- Current (Perfil de usuario)
 - Productos
 - Carrito
 - Chat
-
-Actualmente la vista del carrito está hardcodeada para un cart id en específico.
 
 ### Vista de registro
 
@@ -196,7 +196,7 @@ http://localhost:8080/register
 
 La vista de registro cuenta con un formulario con nombre, apellido, email y contraseña. Todos los campos son obligatorios.
 
-![Vista de registro](https://res.cloudinary.com/doxztm7ed/image/upload/v1709159230/Backend/Readme/18_caw0cx.png)
+![Vista de registro](https://res.cloudinary.com/doxztm7ed/image/upload/v1711398818/Backend/Readme/Captura_de_pantalla_2024-03-25_163158_ld0df3.png)
 
 Al crear un usuario nuevo enseña un mensaje para preguntar si se quiere ir a la pagina de login o registrar otro usuario.
 
@@ -210,7 +210,7 @@ http://localhost:8080/login
 
 La vista de login cuenta con un formulario con email y contraseña. Ademas contiene un link para ir a la pagina de registro por si deseas registrarte.
 
-![Vista de login](https://res.cloudinary.com/doxztm7ed/image/upload/v1709159588/Backend/Readme/20_f0auew.png)
+![Vista de login](https://res.cloudinary.com/doxztm7ed/image/upload/v1711399092/Backend/Readme/Captura_de_pantalla_2024-03-25_163801_sqpccg.png)
 
 ### Vista de productos
 
@@ -220,14 +220,14 @@ http://localhost:8080/products
 
 El header de la vista de productos contiene un mensaje de bienvenida del usuario y si este es admin se añade el mensaje "Soy Admin.
 
-![Header de productos](https://res.cloudinary.com/doxztm7ed/image/upload/v1709159707/Backend/Readme/21_dleojv.png)
+![Header de productos](https://res.cloudinary.com/doxztm7ed/image/upload/v1711400034/Backend/Readme/Captura_de_pantalla_2024-03-25_165343_rayjaq.png)
 
-Tambien cuenta con un boton para hacer logout y para ir a la vista de carrito.
+Tambien cuenta con un boton para para ir a la vista de carrito, ir al perfil o hacer logout.
 
-![Botones header](https://res.cloudinary.com/doxztm7ed/image/upload/v1709159772/Backend/Readme/22_hslcdi.png)
+![Botones header](https://res.cloudinary.com/doxztm7ed/image/upload/v1711399890/Backend/Readme/Captura_de_pantalla_2024-03-25_165107_mcgn3y.png)
 
 La página de productos lista por defecto los 10 primeros productos.
-![Listado de productos](https://res.cloudinary.com/doxztm7ed/image/upload/v1709159878/Backend/Readme/14_lnjcsu.png)
+![Listado de productos](https://res.cloudinary.com/doxztm7ed/image/upload/v1711400091/Backend/Readme/Captura_de_pantalla_2024-03-25_165445_xrhh5v.png)
 
 Cuenta con un páginado para ver los siguientes productos
 ![Paginado](https://res.cloudinary.com/doxztm7ed/image/upload/v1708967949/Backend/Readme/15_gxtmmf.png)
@@ -237,5 +237,10 @@ Al añadir un producto, sale un alert avisando que se ha añadido el producto.
 
 ### Vista de carrito
 
-La página de carrito está hardcodeada para el carrito con el id _65dbf04b8e58e8e94a3e2844_. Esta contiene una tabla con los productos añadidos al carrito.
+Esta contiene una tabla con los productos añadidos al carrito del usuario logueado
 ![Carrito](https://res.cloudinary.com/doxztm7ed/image/upload/v1708967949/Backend/Readme/17_pgoted.png)
+
+### Vista de Perfil
+
+Esta contiene la información del usuario registrado.
+![Perfil](https://res.cloudinary.com/doxztm7ed/image/upload/v1711400198/Backend/Readme/Captura_de_pantalla_2024-03-25_165631_vfldmu.png)

@@ -2,7 +2,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
-import { privateKey } from "./config/config.js";
+import { privateKey, tokenCookieName } from "./config/config.js";
 import passport from "passport";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -16,33 +16,23 @@ export const createResponse = (res, statusCode, data) => {
   return res.status(statusCode).json({ data });
 };
 
-/* export const issueJWT = (user) => {
-  const _id = user._id;
-  const expiresIn = "1d";
-  const payload = {
-    sub: _id,
-    iat: Date.now(),
-  };
-
-  const signedToken = jsonwebtoken.sign(payload, privateKey, {
-    expiresIn: expiresIn,
-  });
-
-  return {
-    token: "Bearer " + signedToken,
-    expires: expiresIn,
-  };
-}; */
-
 export const passportCall = (strategy) => {
-  return async (req, res, next) => {
+  return (req, res, next) => {
     passport.authenticate(strategy, function (err, user, info) {
-      if (err) return next(err);
-      if (!user) {
-        return res.status(401).send({ error: info });
+      try {
+        if (!user) {
+          return res
+            .status(401)
+            .send({ success: false, message: info.message });
+        }
+        req.user = user;
+        next();
+      } catch (error) {
+        if (err) {
+          console.log("err=", err);
+          return next(err);
+        }
       }
-      req.user = user;
-      next();
     })(req, res, next);
   };
 };

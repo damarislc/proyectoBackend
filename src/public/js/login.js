@@ -22,7 +22,7 @@ form.addEventListener("submit", (event) => {
     .then((response) => response.json())
     .then((result) => {
       //si el resultario es exitoso redirige la pagina a productos
-      if (result.success) window.location.href = "/api/sessions/current";
+      if (result.success) window.location.href = "/products";
       else {
         //sino, manda un mensaje de error
         Swal.fire({

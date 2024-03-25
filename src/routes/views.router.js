@@ -1,10 +1,12 @@
 import express from "express";
+import { passportCall } from "../utils.js";
+import { tokenCookieName } from "../config/config.js";
 
 const router = express.Router();
 
 //Por defecto mandar a products
 router.get("/", (req, res) => {
-  res.redirect("/products");
+  res.redirect("/login");
 });
 
 //Renderea la página del chat
@@ -22,12 +24,30 @@ router.get("/register", (req, res) => {
   res.render("register", { title: "Registro" });
 });
 
+router.get("/restore", (req, res) => {
+  res.render("restore");
+});
+
+router.get("/current", passportCall("jwt"), (req, res) => {
+  if (req.cookies[tokenCookieName]) {
+    //se manda el usuario que se obtuvo en el passportCall de JWT a la vista current
+    res.render("current", { title: "Perfil de usuario", user: req.user });
+  } else {
+    res.status(401).json({
+      error: "Invalid jwt",
+    });
+  }
+});
+
 //Obtiene los productos desde un fetch de la api de products
-router.get("/products", (req, res) => {
-  if (!req.session?.user) {
+router.get("/products", passportCall("jwt"), (req, res) => {
+  /*  if (!req.session?.user) {
+    return res.redirect("/login");
+  } */
+  if (!req.cookies[tokenCookieName]) {
     return res.redirect("/login");
   }
-  const user = req.session.user;
+  const user = req.user;
   /** Se obtiene los parametros del request
    * por el momento el frontEnd solo utiliza limit y page.
    */
@@ -79,7 +99,10 @@ router.get("/products", (req, res) => {
 });
 
 //obtiene el carrito desde un fetch de la api de carts
-router.get("/carts/:cid", (req, res) => {
+router.get("/carts/:cid", passportCall("jwt"), (req, res) => {
+  if (!req.cookies[tokenCookieName]) {
+    return res.redirect("/login");
+  }
   //Se obtiene el id del carrito
   const cid = req.params.cid;
   //y se hace un fetch del carrito

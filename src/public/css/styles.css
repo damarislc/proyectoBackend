@@ -2,31 +2,20 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* #products-header h1 {
-  align-items: center;
-} */
-
+/***PRODUCTS*****/
 .welcome {
   font-size: 20px;
   font-weight: 700;
 }
-
-/* #products-header .first-row {
-  display: flex;
-} */
 
 .right {
   display: flex;
   justify-content: end;
 }
 
-/* .div-cart-btn {
-  display: flex;
-  justify-content: end;
-} */
-.view-cart {
-  /* margin-bottom: 15px; */
+.green-btn {
   background: #b9d19b;
+  margin: 12px;
   border-radius: 15px;
   justify-content: center;
   align-items: center;
@@ -37,7 +26,7 @@
 }
 
 .logout {
-  margin-left: 1em;
+  margin: 12px;
   background: #9c8673;
   border-radius: 15px;
   justify-content: center;
@@ -117,6 +106,9 @@
   font-weight: 700;
   cursor: pointer;
 }
+/***--PRODUCTS---*****/
+
+/***CART*****/
 #cart-products {
   border-collapse: collapse;
 }
@@ -141,4 +133,62 @@
   text-align: left;
   background-color: #7799e4;
   color: white;
+}
+/****---CART---*****/
+
+/****LOGIN*****/
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 75px;
+}
+
+.form {
+  border: 1px solid #333333;
+  border-radius: 16px;
+  padding: 1em;
+  background-color: #e5e9d48c;
+}
+
+.form button {
+  border-radius: 16px;
+  background-color: #779ae4b4;
+  font-weight: 700;
+  padding: 0.5em;
+}
+/****---LOGIN---*****/
+
+/****REGISTER*****/
+#register-form {
+  display: flex;
+  flex-direction: column;
+}
+#register-form input {
+  margin: 7px 0;
+}
+
+.goto-login {
+  width: 100%;
+}
+
+/****---REGISTER---*****/
+
+/****RESTORE*****/
+
+/****---RESTORE---*****/
+.perfil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-table,
+.user-table td {
+  border: #333333 solid 1px;
+  border-collapse: collapse;
+}
+
+.perfil-btns {
+  display: flex;
 }
