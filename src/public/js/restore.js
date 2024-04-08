@@ -22,7 +22,7 @@ form.addEventListener("submit", (event) => {
     .then((res) => res.json())
     .then((result) => {
       //si es exitoso muestra un mensaje y manda a la pagina de login
-      if (result.status === "success") {
+      if (result.success) {
         Swal.fire({
           title: "Contraseña restaurada exitosamente",
           icon: "success",

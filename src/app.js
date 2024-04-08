@@ -3,20 +3,17 @@ import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import http from "http";
 import __dirname from "./utils.js";
-import cartRouter from "./routes/cart.router.js";
-import productRouter from "./routes/product.router.js";
-import sessionRouter from "./routes/sessions.router.js";
-import viewsRouter from "./routes/views.router.js";
 import path from "path";
 import mongoose from "mongoose";
 import MessageManager from "./dao/messageManager.js";
-import { mongoURL } from "./config/config.js";
-import MongoStore from "connect-mongo";
-import session from "express-session";
+import config from "./config/config.js";
 import cookieParser from "cookie-parser";
 import initializePassport from "./config/passport.config.js";
 import passport from "passport";
 import cors from "cors";
+import appRouter from "./routes/index.routes.js";
+/* import MongoStore from "connect-mongo";
+import session from "express-session"; */
 
 const app = express();
 const PORT = 8080;
@@ -27,18 +24,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser("myParser"));
 
 //Seteando session con mongo
-app.use(
+/* app.use(
   session({
     store: MongoStore.create({ mongoUrl: mongoURL, ttl: 1000 }),
     secret: "m!Secr3t",
     resave: false,
     saveUninitialized: true,
   })
-);
+); */
 
 //Crea la conección con la base de datos
 mongoose
-  .connect(mongoURL)
+  .connect(config.mongoURL)
   .then(() => console.log("Conectado a la BD"))
   .catch((error) => console.error("Error al conectarse a la BD", error));
 
@@ -65,11 +62,8 @@ app.set("view engine", ".hbs");
 app.set("views", path.resolve(__dirname + "/views"));
 //se le dice donde estan los archivos estaticos
 app.use(express.static(__dirname + "/public"));
-//asignacion de routers
-app.use("/api/products", productRouter);
-app.use("/api/carts", cartRouter);
-app.use("/api/sessions", sessionRouter);
-app.use("/", viewsRouter);
+
+app.use(appRouter);
 
 //crea una instancia del MessageManager
 const messageManager = new MessageManager();

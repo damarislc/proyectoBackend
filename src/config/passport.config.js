@@ -2,20 +2,23 @@ import jwt from "passport-jwt";
 import local from "passport-local";
 import GitHubStrategy from "passport-github2";
 import userModel from "../dao/models/user.model.js";
-import { privateKey, tokenCookieName } from "./config.js";
+import config from "./config.js";
 import { createHash, isValidPassword } from "../utils.js";
-
-import CartManager from "../dao/cartManager.js";
+import CartService from "../services/cart.service.js";
+import UserService from "../services/user.service.js";
 
 const ExtractJwt = jwt.ExtractJwt;
 const JwtStrategy = jwt.Strategy;
 const LocalStrategy = local.Strategy;
 
+const userService = new UserService();
+const cartService = new CartService();
+
 const initializePassport = (passport) => {
   const cookieExtractor = (req) => {
     let token = null;
     if (req && req.cookies) {
-      token = req.cookies[tokenCookieName];
+      token = req.cookies[config.tokenCookieName];
     }
 
     return token;
@@ -23,7 +26,7 @@ const initializePassport = (passport) => {
 
   const options = {
     jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-    secretOrKey: privateKey,
+    secretOrKey: config.privateKey,
   };
 
   passport.use(
@@ -53,12 +56,12 @@ const initializePassport = (passport) => {
         }
 
         try {
-          let user = await userModel.findOne({ email: username });
+          let user = await userService.getUserByEmail(username);
           if (user) {
             return done(null, false, { message: "El usuario ya existe" });
           }
-          const cartManager = new CartManager();
-          const cart = await cartManager.addCart();
+
+          const cart = await cartService.createCart();
           user = {
             name,
             lastname,
@@ -68,12 +71,12 @@ const initializePassport = (passport) => {
             password: createHash(password),
           };
           if (
-            username === "adminCoder@coder.com" &&
-            password === "adminCod3r123"
+            username === config.adminName &&
+            password === config.adminPassword
           ) {
             user.role = "admin";
           }
-          const userCreated = await userModel.create(user);
+          const userCreated = await userService.createUser(user);
           return done(null, userCreated);
         } catch (error) {
           return done(null, false, {
@@ -90,7 +93,7 @@ const initializePassport = (passport) => {
       { usernameField: "email" },
       async (username, password, done) => {
         try {
-          const user = await userModel.findOne({ email: username });
+          const user = await userService.getUserByEmail(username);
           if (!user) {
             return done(null, false, { message: "El usuario no existe" });
           }

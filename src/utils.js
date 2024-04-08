@@ -1,8 +1,7 @@
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import bcrypt from "bcrypt";
-import jsonwebtoken from "jsonwebtoken";
-import { privateKey, tokenCookieName } from "./config/config.js";
+//import { privateKey, tokenCookieName } from "./config/config.js";
 import passport from "passport";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

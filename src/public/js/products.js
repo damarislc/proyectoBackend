@@ -17,9 +17,9 @@ async function addProduct(pid) {
     method: "POST",
   })
     .then((res) => res.json())
-    .then((data) => {
+    .then((result) => {
       //si la data tiene un estatus success
-      if (data.status === "success") {
+      if (result.success) {
         //se manda  un alert de que el producto se ha añadido al carrito
         Swal.fire({
           title: "Producto añadido al carrito",
