@@ -1,8 +1,8 @@
-import UserDao from "../dao/userDao.js";
+import UserDTO from "../dto/user.dto.js";
 
-export default class UserService {
-  constructor() {
-    this.userDao = new UserDao();
+export default class UserRepository {
+  constructor(dao) {
+    this.userDao = dao;
   }
 
   getUsers = async () => {

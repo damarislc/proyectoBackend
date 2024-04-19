@@ -15,6 +15,27 @@
 
 .green-btn {
   background: #b9d19b;
+}
+
+.red-btn {
+  background: #f70707;
+}
+
+.green-btn,
+.red-btn {
+  margin: 12px;
+  border-radius: 15px;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-admin {
+  background: #992026;
+  color: white;
   margin: 12px;
   border-radius: 15px;
   justify-content: center;
@@ -75,6 +96,16 @@
   cursor: pointer;
 }
 
+.status {
+  border: #992026 solid 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 16px 16px 0 16px;
+}
+
 #pagination {
   display: flex;
   justify-content: center;
@@ -109,30 +140,48 @@
 /***--PRODUCTS---*****/
 
 /***CART*****/
-#cart-products {
+#container--cart-products {
+  display: flex;
+  flex-direction: column;
+}
+#table-cart-products {
   border-collapse: collapse;
 }
 
-#cart-products td,
-#cart-products th {
+#table-cart-products td,
+#table-cart-products th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#cart-products tr:nth-child(even) {
+#table-cart-products tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-#cart-products tr:hover {
+#table-cart-products tr:hover {
   background-color: #ddd;
 }
 
-#cart-products th {
+#table-cart-products th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
   background-color: #7799e4;
   color: white;
+}
+
+.total-label {
+  text-align: end;
+  font-weight: 700;
+}
+
+.total {
+  font-weight: 700;
+}
+
+.container--purchase {
+  display: flex;
+  justify-content: end;
 }
 /****---CART---*****/
 
@@ -191,4 +240,32 @@
 
 .perfil-btns {
   display: flex;
+}
+
+/****EDIT*****/
+#edit-form,
+#create-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+#edit-form label,
+#create-form label {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+#edit-form button,
+#create-form button {
+  margin-top: 1.5em;
+}
+/****---EDIT---*****/
+
+/****---Sweet alert---****/
+#swal2-html-container {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
 }

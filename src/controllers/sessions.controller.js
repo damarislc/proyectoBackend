@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
-import UserService from "../services/user.service.js";
+import { userService } from "../services/index.js";
 import { createHash } from "../utils.js";
 
 export default class SessionsController {
   constructor() {
-    this.userService = new UserService();
+    this.userService = userService;
   }
 
   register = (req, res, next) => {

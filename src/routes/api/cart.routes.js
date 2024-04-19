@@ -1,5 +1,6 @@
 import express from "express";
 import CartController from "../../controllers/cart.controller.js";
+import TicketController from "../../controllers/ticket.controller.js";
 
 const router = express.Router();
 //crea una instancia del CartManager
@@ -12,6 +13,8 @@ const {
   updateProductQuantity,
   deleteAllProductsFromCart,
 } = new CartController();
+
+const { createTicket } = new TicketController();
 
 //Crear carrito
 router.post("/", createCart);
@@ -35,5 +38,7 @@ router.put("/:cid", updateCart);
 router.put("/:cid/product/:pid", updateProductQuantity);
 
 router.delete("/:cid", deleteAllProductsFromCart);
+
+router.post("/:cid/purchase", createTicket);
 
 export default router;

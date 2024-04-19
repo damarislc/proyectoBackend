@@ -1,10 +1,7 @@
-import CartDao from "../dao/cartDao.js";
-import ProductDao from "../dao/productDao.js";
-
-export default class CartService {
-  constructor() {
-    this.cartDao = new CartDao();
-    this.productDao = new ProductDao();
+export default class CartRepository {
+  constructor(cartDao, productDao) {
+    this.cartDao = cartDao;
+    this.productDao = productDao;
   }
 
   createCart = async () => {
@@ -17,7 +14,7 @@ export default class CartService {
 
   getCart = async (id) => {
     try {
-      return this.cartDao.get(id);
+      return await this.cartDao.get(id);
     } catch (error) {
       return Promise.reject("Error al obtener el carrito: " + error);
     }
@@ -25,14 +22,16 @@ export default class CartService {
 
   addProductToCart = async (cid, pid) => {
     try {
-      const cart = this.cartDao.get(cid);
-      const productExists = this.productDao.getById(pid);
+      const cart = await this.cartDao.get(cid);
+      const productExists = await this.productDao.getById(pid);
       //Si el carrito no existe manda un mensaje de error
       if (!cart) {
         return Promise.reject("El carrito no existe");
         //y si el producto no existe, manda mensaje de error
       } else if (!productExists) {
         return Promise.reject("El producto no existe");
+      } else if (productExists.stock === 0) {
+        return null;
       }
       const product = {
         id: pid,
@@ -63,8 +62,8 @@ export default class CartService {
 
       //primero se valida que todos los productos a modificar, existan
 
-      products.forEach((product) => {
-        const productExists = this.productDao.getById(product.productId);
+      products.forEach(async (product) => {
+        const productExists = await this.productDao.getById(product.productId);
         if (!productExists) {
           return Promise.reject(
             `El producto con el id ${product.productId} no existe`
@@ -103,7 +102,7 @@ export default class CartService {
 
   deleteAllProductsFromCart = async (cid) => {
     try {
-      return this.cartDao.delete(cid);
+      return await this.cartDao.delete(cid);
     } catch (error) {
       return Promise.reject(
         "Error al borrar los productos del carrito: " + error

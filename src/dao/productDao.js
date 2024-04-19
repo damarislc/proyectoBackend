@@ -77,4 +77,15 @@ export default class ProductDao {
       { new: true }
     );
   }
+
+  async getStock(pid) {
+    return await this.model.findOne({ _id: pid }).select("stock");
+  }
+
+  async updateStock(pid, newStock) {
+    return await this.model.findOneAndUpdate(
+      { _id: pid },
+      { $set: { stock: newStock } }
+    );
+  }
 }

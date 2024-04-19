@@ -4,15 +4,12 @@ import GitHubStrategy from "passport-github2";
 import userModel from "../dao/models/user.model.js";
 import config from "./config.js";
 import { createHash, isValidPassword } from "../utils.js";
-import CartService from "../services/cart.service.js";
-import UserService from "../services/user.service.js";
+import { cartService, userService } from "../services/index.js";
+import UserDTO from "../dto/user.dto.js";
 
 const ExtractJwt = jwt.ExtractJwt;
 const JwtStrategy = jwt.Strategy;
 const LocalStrategy = local.Strategy;
-
-const userService = new UserService();
-const cartService = new CartService();
 
 const initializePassport = (passport) => {
   const cookieExtractor = (req) => {
@@ -33,7 +30,8 @@ const initializePassport = (passport) => {
     "jwt",
     new JwtStrategy(options, (jwt_payload, done) => {
       try {
-        return done(null, jwt_payload, { message: "Authenticado" });
+        const userDto = new UserDTO(jwt_payload);
+        return done(null, userDto, { message: "Authenticado" });
       } catch (error) {
         return done(null, null, {
           message: "Error en la autenticación:" + error,

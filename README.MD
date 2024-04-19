@@ -168,10 +168,10 @@ El proyecto cuenta por el momento con 2 API REST, las rutas con las siguientes:
 
 ### Chat:
 
-El chat se encuentra en la ruta raiz y se puede acceder desde:
+El chat se encuentra en la ruta chat y se puede acceder desde la siguiente ruta, solo si el usuario es tipo "user":
 
 ```bash
-http://localhost:8080/
+http://localhost:8080/chat
 ```
 
 Los mensajes serán almacenados en la base de datos en la colección messages y contendrá un campo user con el email del usuario y el campo message con el mensaje enviado.
@@ -226,6 +226,14 @@ Tambien cuenta con un boton para para ir a la vista de carrito, ir al perfil o h
 
 ![Botones header](https://res.cloudinary.com/doxztm7ed/image/upload/v1711399890/Backend/Readme/Captura_de_pantalla_2024-03-25_165107_mcgn3y.png)
 
+Si eres admin aparece los botones para Crear producto, Editar producto y Eliminar producto (este último solo deshabilita el producto y no lo borra de la DB por cuestiones de persistencia de las compras pasadas.)
+
+![Boton de crear producto](https://res.cloudinary.com/doxztm7ed/image/upload/v1713547435/Backend/Readme/Captura_de_pantalla_2024-04-19_132311_zn1klr.png)
+
+(Solo el admin puede ver los productos que no están habilitados).
+
+![Botones de editar y eliminar producto, asi como el texto si el producto está habilitado o no ](https://res.cloudinary.com/doxztm7ed/image/upload/v1713547476/Backend/Readme/Captura_de_pantalla_2024-04-19_132423_wa7uva.png)
+
 La página de productos lista por defecto los 10 primeros productos.
 ![Listado de productos](https://res.cloudinary.com/doxztm7ed/image/upload/v1711400091/Backend/Readme/Captura_de_pantalla_2024-03-25_165445_xrhh5v.png)
 
@@ -235,10 +243,46 @@ Cuenta con un páginado para ver los siguientes productos
 Al añadir un producto, sale un alert avisando que se ha añadido el producto.
 ![Alert](https://res.cloudinary.com/doxztm7ed/image/upload/v1708967949/Backend/Readme/16_xqjfzj.png)
 
+Si un producto no hay stock, no te deja añadirlo al carrito
+![Alert no disponibilidad](https://res.cloudinary.com/doxztm7ed/image/upload/v1713547668/Backend/Readme/Captura_de_pantalla_2024-04-19_132657_h3y7nu.png)
+
+Solo el usuario tiene habilitado el boton para ir al chat
+![Botón chat](https://res.cloudinary.com/doxztm7ed/image/upload/v1713548330/Backend/Readme/Captura_de_pantalla_2024-04-19_133820_p0c7gq.png)
+
+#### Funciones de administrador con los productos
+
+Vista Crear producto:
+![Crear producto](https://res.cloudinary.com/doxztm7ed/image/upload/v1713548390/Backend/Readme/Captura_de_pantalla_2024-04-19_133919_o2atjn.png)
+
+![Producto creado](https://res.cloudinary.com/doxztm7ed/image/upload/v1713548458/Backend/Readme/Captura_de_pantalla_2024-04-19_134034_pjjit1.png)
+
+Vista Editar producto
+![Editar producto](https://res.cloudinary.com/doxztm7ed/image/upload/v1713548522/Backend/Readme/Captura_de_pantalla_2024-04-19_134152_msgvkv.png)
+
+![Producto actualizado](https://res.cloudinary.com/doxztm7ed/image/upload/v1713548551/Backend/Readme/Captura_de_pantalla_2024-04-19_134222_guclph.png)
+
+Eliminar producto, este en realidad no elimina el producto, solo lo deshabilita para el usuario, esto por cuestión de persistencia con las compras pasadas.
+![Confirmación de eliminar producto](https://res.cloudinary.com/doxztm7ed/image/upload/v1713549238/Backend/Readme/Captura_de_pantalla_2024-04-19_135344_trd9po.png)
+
+Caso de elegir no, se cancela la eliminación
+![Se cancela la eliminación](https://res.cloudinary.com/doxztm7ed/image/upload/v1713549261/Backend/Readme/Captura_de_pantalla_2024-04-19_135412_fk7pdt.png)
+
+Caso de elegir sí, se deshabilita y refresca la página
+![Mensaje de confirmación](https://res.cloudinary.com/doxztm7ed/image/upload/v1713549345/Backend/Readme/Captura_de_pantalla_2024-04-19_135528_gx5nnj.png)
+
+Producto con el campo deshabilitado, es visible para el admin pero no para el usuario
+![Producto deshabilitado](https://res.cloudinary.com/doxztm7ed/image/upload/v1713549408/Backend/Readme/Captura_de_pantalla_2024-04-19_135638_stwxif.png)
+
 ### Vista de carrito
 
 Esta contiene una tabla con los productos añadidos al carrito del usuario logueado
-![Carrito](https://res.cloudinary.com/doxztm7ed/image/upload/v1708967949/Backend/Readme/17_pgoted.png)
+![Carrito](https://res.cloudinary.com/doxztm7ed/image/upload/v1713548033/Backend/Readme/Captura_de_pantalla_2024-04-19_133342_b0vbz9.png)
+
+Al hacer clic en finalizar la compra, compra aquellos productos en los que hay stock suficiente. Por ejemplo en este caso, el "Control remoto universal" se está queriendo comprar 2, pero solo hay 1 disponible, por lo que lo que procesará esa compra y solo lo hará por los audífonos y la brocha.
+![Compra](https://res.cloudinary.com/doxztm7ed/image/upload/v1713548154/Backend/Readme/Captura_de_pantalla_2024-04-19_133544_qofstk.png)
+
+Y se actualiza el carrito dejando solo el/los productos que no se pudieron comprar.
+![Carrito actualizado](https://res.cloudinary.com/doxztm7ed/image/upload/v1713548236/Backend/Readme/Captura_de_pantalla_2024-04-19_133638_elbgaj.png)
 
 ### Vista de Perfil
 

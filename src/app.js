@@ -5,13 +5,13 @@ import http from "http";
 import __dirname from "./utils.js";
 import path from "path";
 import mongoose from "mongoose";
-import MessageManager from "./dao/messageManager.js";
 import config from "./config/config.js";
 import cookieParser from "cookie-parser";
 import initializePassport from "./config/passport.config.js";
 import passport from "passport";
 import cors from "cors";
 import appRouter from "./routes/index.routes.js";
+import { initChatSocket } from "./utils/socket.js";
 /* import MongoStore from "connect-mongo";
 import session from "express-session"; */
 
@@ -19,9 +19,11 @@ const app = express();
 const PORT = 8080;
 
 //middlewares para el manejo del REST
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser("myParser"));
+app
+  .use(express.json())
+  .use(express.urlencoded({ extended: true }))
+  .use(cookieParser())
+  .use(cors());
 
 //Seteando session con mongo
 /* app.use(
@@ -39,18 +41,9 @@ mongoose
   .then(() => console.log("Conectado a la BD"))
   .catch((error) => console.error("Error al conectarse a la BD", error));
 
-//creando el http server
-const httpServer = http.createServer(app);
-httpServer.listen(PORT, () =>
-  console.log(`Servidor corriendo en el puerto ${PORT}`)
-);
-
-//creando el servidor de sockets
-const io = new Server(httpServer);
-
 initializePassport(passport);
 app.use(passport.initialize());
-app.use(cors());
+
 /* app.use(passport.session()) */
 
 //Configuracion de handlebars
@@ -65,41 +58,13 @@ app.use(express.static(__dirname + "/public"));
 
 app.use(appRouter);
 
-//crea una instancia del MessageManager
-const messageManager = new MessageManager();
-//crea un arreglo de usuarios
-const users = {};
+//creando el http server
+const httpServer = http.createServer(app);
+httpServer.listen(PORT, () =>
+  console.log(`Servidor corriendo en el puerto ${PORT}`)
+);
 
-//Cuando se crea una conección con el socket
-io.on("connection", (socket) => {
-  console.log("Un usuario se ha conectado");
-  //y se recibe el evento newUser
-  socket.on("newUser", (userEmail) => {
-    //almacena el email del usuario en el arreglo de usuarios con el indice del socket actual
-    users[socket.id] = userEmail;
-    //y emite el evento userConnected hacia el frontend
-    io.emit("userConnected", userEmail);
-  });
+//creando el servidor de sockets
+const io = new Server(httpServer);
 
-  //cuando se recibe el evento chatMessage
-  socket.on("chatMessage", (message) => {
-    //obtiene el email del arreglo con el id del socket correspondiente
-    const userEmail = users[socket.id];
-
-    //Almacena el mensaje y el email en la base de datos llamando al método addMessage
-    //Si la promesa es exitosa, emite el evento message al frontEnd
-    //sino, emite el evento error
-    messageManager
-      .addMessage(userEmail, message)
-      .then(io.emit("message", { userEmail, message }))
-      .catch((error) => io.emit("error", error));
-  });
-
-  //si se recibe el evento disconnect
-  socket.on("disconnect", () => {
-    //se elimina el usuario del arreglo
-    const userEmail = users[socket.id];
-    delete users[socket.id];
-    io.emit("userDisconnected", userEmail);
-  });
-});
+initChatSocket(io);

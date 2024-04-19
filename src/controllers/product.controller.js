@@ -1,8 +1,10 @@
-import ProductService from "../services/product.service.js";
+import { productService } from "../services/index.js";
+import jwt from "jsonwebtoken";
+import config from "../config/config.js";
 
 export default class ProductController {
   constructor() {
-    this.productService = new ProductService();
+    this.productService = productService;
   }
 
   getProducts = (req, res) => {
@@ -27,6 +29,8 @@ export default class ProductController {
       category,
     };
 
+    const user = jwt.decode(req.cookies[config.tokenCookieName]);
+
     //Llama el método getProducts
     //si la promesa es exitosa manda el resultado
     //sino manda un mensaje de error
@@ -37,6 +41,7 @@ export default class ProductController {
         return res.status(201).json({
           success: true,
           payload: products.docs,
+          user: user,
           totalPages: products.totalPages,
           prevPage: products.prevPage,
           nextPage: products.nextPage,

@@ -1,5 +1,6 @@
 import express, { query } from "express";
 import ProductController from "../../controllers/product.controller.js";
+import { handlePolicies } from "../../middlewares/authorization.middleware.js";
 
 const router = express.Router();
 const {
@@ -17,12 +18,12 @@ router.get("/", getProducts);
 router.get("/:pid", getProductById);
 
 //Añadir producto
-router.post("/", createProduct);
+router.post("/", handlePolicies("ADMIN"), createProduct);
 
 //Actualizar producto
-router.put("/:pid", updateProduct);
+router.put("/:pid", handlePolicies("ADMIN"), updateProduct);
 
 //Eliminar producto
-router.delete("/:pid", deleteProduct);
+router.delete("/:pid", handlePolicies("ADMIN"), deleteProduct);
 
 export default router;

@@ -1,8 +1,8 @@
-import CartService from "../services/cart.service.js";
+import { cartService } from "../services/index.js";
 
 export default class CartController {
   constructor() {
-    this.cartService = new CartService();
+    this.cartService = cartService;
   }
 
   createCart = (req, res) => {
@@ -36,7 +36,15 @@ export default class CartController {
     //sino manda un mensaje de error
     this.cartService
       .addProductToCart(cid, pid)
-      .then((result) => res.send({ success: true, payload: result }))
+      .then((result) => {
+        if (result) res.send({ success: true, payload: result });
+        else
+          res.send({
+            success: false,
+            unavailable: true,
+            message: "No hay disponibilidad del producto.",
+          });
+      })
       .catch((error) => res.send({ status: "error", error: error }));
   };
 

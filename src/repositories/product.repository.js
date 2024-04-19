@@ -1,8 +1,6 @@
-import ProductDao from "../dao/productDao.js";
-
-export default class ProductService {
-  constructor() {
-    this.dao = new ProductDao();
+export default class ProductRepository {
+  constructor(dao) {
+    this.dao = dao;
   }
 
   getProducts = async (params) => {
@@ -64,6 +62,24 @@ export default class ProductService {
       return await this.dao.delete(id);
     } catch (error) {
       return Promise.reject("Error al eliminar el producto: " + error);
+    }
+  };
+
+  getProductStock = async (pid) => {
+    try {
+      return await this.dao.getStock(pid);
+    } catch (error) {
+      return Promise.reject("Error al obtener el stock del producto: " + error);
+    }
+  };
+
+  updateProductStock = async (pid, newStock) => {
+    try {
+      return await this.dao.updateStock(pid, newStock);
+    } catch (error) {
+      return Promise.reject(
+        "Error al actualizar el stock del producto: " + error
+      );
     }
   };
 }

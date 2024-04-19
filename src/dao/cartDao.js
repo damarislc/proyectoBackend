@@ -47,6 +47,7 @@ export default class CartDao {
       }
     );
   }
+
   async updateProductQuantity(cid, product) {
     const updatedCart = await this.cartModel.findOneAndUpdate(
       {

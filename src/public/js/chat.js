@@ -36,7 +36,7 @@ socket.on("error", (error) => {
   });
 });
 
-//Obtiene el elemento con el id useremail-form
+/* //Obtiene el elemento con el id useremail-form
 const useremailForm = document.querySelector("#useremail-form");
 //Le añade un event listener al elemento
 useremailForm.addEventListener("submit", (e) => {
@@ -58,4 +58,25 @@ useremailForm.addEventListener("submit", (e) => {
   useremailForm.style.display = "none";
   //muestra el form para enviar mensajes
   document.querySelector("#chat-form").style.display = "block";
-});
+}); */
+
+const loadChat = async () => {
+  const result = await fetch("/api/user");
+  data = await result.json();
+  const userEmail = data.email;
+
+  //manda el nuevo usario al backend
+  socket.emit("newUser", userEmail);
+
+  //Muestra un alert cuando el usuario se "conecta" con su email
+  Swal.fire({
+    title: "Bienvenido al chat",
+    text: `Estas conectado como ${userEmail}`,
+    icon: "success",
+  });
+
+  //muestra el form para enviar mensajes
+  //document.querySelector("#chat-form").style.display = "block";
+};
+
+loadChat();

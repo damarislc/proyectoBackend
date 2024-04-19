@@ -1,0 +1,27 @@
+<div class="center">
+  <div class="form">
+    <form id="edit-form">
+      <label for="title">Título</label>
+      <input type="text" name="title" id="title" required />
+      <label for="code">Código</label>
+      <input type="text" name="code" id="code" required />
+      <label for="description">Descripción</label>
+      <input type="text" name="description" id="description" required />
+      <label for="price">Precio</label>
+      <input type="number" name="price" id="price" required />
+      <label for="category">Categoría</label>
+      <input type="text" name="category" id="category" required />
+      <label for="stock">Cantidad disponible</label>
+      <input type="number" name="stock" id="stock" required />
+      <label for="status">Habilitado</label>
+      <div class="able-form">
+        <input type="radio" id="radio-true" name="status" value="true" />
+        <label for="true">Sí</label>
+        <input type="radio" id="radio-false" name="status" value="false" />
+        <label for="false">No</label>
+      </div>
+      <button type="submit">Actualizar</button>
+    </form>
+  </div>
+</div>
+<script src="/js/editProduct.js"></script>
