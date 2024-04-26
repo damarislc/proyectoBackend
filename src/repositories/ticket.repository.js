@@ -49,7 +49,7 @@ export default class TicketRepository {
         const quantity = item.quantity;
         const resultStock = await this.productDao.getStock(product._id);
         const stock = resultStock.stock;
-        const status = item.status;
+        const status = product.status;
 
         if (quantity <= stock && status) {
           productsPurchased.push({ id: product._id, title: product.title });
