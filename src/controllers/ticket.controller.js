@@ -92,6 +92,9 @@ export default class TicketController {
           return next(err);
         }
       })
-      .catch((error) => next(error));
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
   };
 }

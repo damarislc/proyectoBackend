@@ -17,6 +17,7 @@ export default class UserController {
       const users = await this.userService.getUsers();
       res.send(users);
     } catch (error) {
+      req.logger.error(error);
       next(error);
     }
   };
@@ -32,6 +33,7 @@ export default class UserController {
       });
       res.status(201).send({ success: true, payload: result });
     } catch (error) {
+      req.logger.error(error);
       next(error);
     }
   };

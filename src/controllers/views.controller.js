@@ -31,6 +31,7 @@ export default class ViewsController {
       //se manda el usuario que se obtuvo en el passportCall de JWT a la vista current
       res.render("current", { title: "Perfil de usuario", user: req.user });
     } else {
+      req.logger.info("Token invalido");
       res.status(401).json({
         error: "Invalid jwt",
       });
@@ -39,6 +40,7 @@ export default class ViewsController {
 
   renderProducts = (req, res) => {
     if (!req.cookies[config.tokenCookieName]) {
+      req.logger.info("Token invalido");
       return res.redirect("/login");
     }
 
@@ -64,6 +66,7 @@ export default class ViewsController {
 
   renderProduct = (req, res) => {
     if (!req.cookies[config.tokenCookieName]) {
+      req.logger.info("Token invalido");
       return res.redirect("/login");
     }
 
@@ -74,6 +77,7 @@ export default class ViewsController {
 
   renderCreate = (req, res) => {
     if (!req.cookies[config.tokenCookieName]) {
+      req.logger.info("Token invalido");
       return res.redirect("/login");
     }
 
@@ -84,6 +88,7 @@ export default class ViewsController {
 
   renderCart = (req, res) => {
     if (!req.cookies[config.tokenCookieName]) {
+      req.logger.info("Token invalido");
       return res.redirect("/login");
     }
 

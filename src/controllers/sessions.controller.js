@@ -31,6 +31,8 @@ export default class SessionsController {
       expiresIn: "24h",
     });
 
+    req.logger.debug("Token creado");
+
     //guardamos el token en una cookie con httpOnly true y mandamos la respuesta
     res
       .cookie(config.tokenCookieName, token, {
@@ -52,6 +54,9 @@ export default class SessionsController {
       res.status(401).json({
         error: "Invalid jwt",
       });
+      req.logger.debug(
+        `Invalid jwt token ${req.cookies[config.tokenCookieName]}`
+      );
     }
   };
 

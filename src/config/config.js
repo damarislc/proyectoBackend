@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 
-/* const environment = "DEV";
-dotenv.config({ path: environment === "DEV" ? "./.env.dev" : "./.env.prod" }); */
-dotenv.config({ path: "./.env" });
+export const environment = "DEV";
+dotenv.config({ path: environment === "DEV" ? "./.env.dev" : "./.env.prod" });
+//dotenv.config({ path: "./.env" });
 
 export default {
   mongoURL: process.env.MONGOURL,

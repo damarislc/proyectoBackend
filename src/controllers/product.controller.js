@@ -59,7 +59,10 @@ export default class ProductController {
             : null,
         });
       })
-      .catch((error) => next(error));
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
   };
 
   createProduct = (req, res, next) => {
@@ -90,6 +93,7 @@ export default class ProductController {
         res.status(201).send({ success: true, payload: result })
       )
       .catch((error) => {
+        req.logger.error(error);
         next(error);
       });
   };
@@ -115,7 +119,10 @@ export default class ProductController {
           return next(err);
         }
       })
-      .catch((error) => next(error));
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
   };
 
   updateProduct = (req, res, next) => {
@@ -143,7 +150,10 @@ export default class ProductController {
           return next(err);
         }
       })
-      .catch((error) => next(error));
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
   };
 
   deleteProduct = (req, res, next) => {
@@ -167,6 +177,9 @@ export default class ProductController {
           return next(err);
         }
       })
-      .catch((error) => next(error));
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
   };
 }

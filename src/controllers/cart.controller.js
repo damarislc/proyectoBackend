@@ -14,7 +14,10 @@ export default class CartController {
     this.cartService
       .createCart()
       .then((cart) => res.send({ success: true, payload: cart }))
-      .catch((error) => next(error));
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
   };
 
   getCart = (req, res, next) => {
@@ -26,7 +29,10 @@ export default class CartController {
     this.cartService
       .getCart(cid)
       .then((result) => res.send({ success: true, payload: result }))
-      .catch((error) => next(error));
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
   };
 
   addProductToCart = (req, res, next) => {
@@ -50,7 +56,10 @@ export default class CartController {
           return next(err);
         }
       })
-      .catch((error) => next(error));
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
   };
 
   deleteProductFromCart = (req, res, next) => {
@@ -60,7 +69,10 @@ export default class CartController {
     this.cartService
       .deleteProductFromCart(cid, pid)
       .then((result) => res.send({ success: true, payload: result }))
-      .catch((error) => next(error));
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
   };
 
   updateCart = (req, res, next) => {
@@ -69,7 +81,10 @@ export default class CartController {
     this.cartService
       .updateCart(cid, products)
       .then((result) => res.send({ success: true, payload: result }))
-      .catch((error) => next(error));
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
   };
 
   updateProductQuantity = (req, res, next) => {
@@ -84,7 +99,10 @@ export default class CartController {
     this.cartService
       .updateProductQuantity(cid, pid, quantity)
       .then((result) => res.send({ success: true, payload: result }))
-      .catch((error) => next(error));
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
   };
 
   deleteAllProductsFromCart = (req, res, next) => {
@@ -93,6 +111,9 @@ export default class CartController {
     this.cartService
       .deleteAllProductsFromCart(cid)
       .then((result) => res.send({ success: true, payload: result }))
-      .catch((error) => next(error));
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
   };
 }
