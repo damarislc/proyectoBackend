@@ -28,7 +28,7 @@ form.addEventListener("submit", (event) => {
         Swal.fire({
           title: "Error al iniciar sesion",
           icon: "error",
-          text: result.message,
+          text: result.error.cause,
         });
       }
     })

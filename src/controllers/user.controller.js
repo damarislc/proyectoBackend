@@ -12,26 +12,27 @@ export default class UserController {
     res.send(user);
   };
 
-  getUsers = async (req, res) => {
+  getUsers = async (req, res, next) => {
     try {
       const users = await this.userService.getUsers();
       res.send(users);
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   };
 
-  createUser = async (req, res) => {
+  createUser = async (req, res, next) => {
     try {
-      const { name, lastname, email } = req.body;
+      const { name, lastname, age, email } = req.body;
       const result = await this.userService.createUser({
         name,
         lastname,
+        age,
         email,
       });
       res.status(201).send({ success: true, payload: result });
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   };
 }

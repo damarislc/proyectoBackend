@@ -31,9 +31,10 @@ productForm.addEventListener("submit", (event) => {
         });
       } else {
         Swal.fire({
-          title: "Error al crear el producto",
+          title: result.error.name,
           icon: "error",
-          text: result.message,
+          text: `${result.error.message}. Código del error: ${result.error.code}`,
+          html: result.error.cause,
         });
       }
     })

@@ -82,6 +82,12 @@ const deleteProductFromCart = (pid) => {
           //recarga la pagina
           if (result.isConfirmed) location.reload();
         });
+      } else {
+        Swal.fire({
+          title: "Error al eliminar el producto del carrito.",
+          icon: "error",
+          text: result.error,
+        });
       }
     })
     .catch((error) => {
@@ -134,8 +140,9 @@ const purchase = () => {
       } else {
         //se manda  un alert de que no se pudo hacer la compra
         Swal.fire({
-          title: result.message,
+          title: result.error.name,
           icon: "error",
+          text: result.error.cause,
         });
       }
     })

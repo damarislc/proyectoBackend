@@ -33,7 +33,8 @@ export default class ProductDao {
    * @returns el producto encontrado
    */
   async getByCode(code) {
-    return await this.model.findOne({ code: code });
+    let result = await this.model.findOne({ code: code });
+    return result;
   }
 
   /**

@@ -38,7 +38,7 @@ form.addEventListener("submit", (event) => {
         Swal.fire({
           title: "Error al registrarse",
           icon: "error",
-          text: result.message,
+          html: result.error.cause,
         });
       }
     })

@@ -1,6 +1,8 @@
 import { ticketService } from "../services/index.js";
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
+import CustomError from "../services/errors/CustomError.js";
+import EErrors from "../services/errors/enums.js";
 
 export default class TicketController {
   constructor() {
@@ -67,7 +69,7 @@ export default class TicketController {
       });
   };
 
-  createTicket = (req, res) => {
+  createTicket = (req, res, next) => {
     const user = jwt.decode(req.cookies[config.tokenCookieName]);
     const cid = req.params.cid;
     this.ticketService
@@ -76,18 +78,20 @@ export default class TicketController {
         if (result.productsPurchased.length > 0) {
           res.status(201).send({ success: true, payload: result });
         } else {
-          res.status(200).send({
+          /* res.status(200).send({
             success: false,
             message:
               "Ninguno de los productos se encuentran disponibles en este momento, no se pudo realizar la compra.",
-          });
+          }); */
+          const err = new CustomError(
+            "Error al finalizar la compra",
+            "Ninguno de los productos se encuentran disponibles en este momento, no se pudo realizar la compra.",
+            "Error al finalizar la compra por falta de disponibilidad",
+            EErrors.OUT_OF_STOCK
+          );
+          return next(err);
         }
       })
-      .catch((error) => {
-        res.status(500).send({
-          success: false,
-          message: "Error al crear el ticket, " + error,
-        });
-      });
+      .catch((error) => next(error));
   };
 }

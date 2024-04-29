@@ -2,7 +2,7 @@ import express from "express";
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import http from "http";
-import __dirname from "./utils.js";
+import __dirname, { generateProducts, products } from "./utils.js";
 import path from "path";
 import mongoose from "mongoose";
 import config from "./config/config.js";
@@ -60,9 +60,11 @@ app.use(appRouter);
 
 //creando el http server
 const httpServer = http.createServer(app);
-httpServer.listen(PORT, () =>
-  console.log(`Servidor corriendo en el puerto ${PORT}`)
-);
+httpServer.listen(PORT, () => {
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
+  //ejecta el mockup de productos
+  if (products.length === 0) generateProducts();
+});
 
 //creando el servidor de sockets
 const io = new Server(httpServer);

@@ -1,0 +1,25 @@
+<header>
+  <h1 class="mockup-header">Mockup de productos</h1>
+</header>
+<main class="mocking-products">
+  {{#each products}}
+    {{#if status}}
+      <div class="product">
+        <span>ID</span>
+        <p>{{id}}</p>
+        <span>Título</span>
+        <p>{{title}}</p>
+        <span>Código</span>
+        <p>{{code}}</p>
+        <span>Descripción</span>
+        <p>{{description}}</p>
+        <span>Precio</span>
+        <p>{{price}}</p>
+        <span>Cantidad disponible</span>
+        <p>{{stock}}</p>
+        <span>Categoría</span>
+        <p>{{category}}</p>
+      </div>
+    {{/if}}
+  {{/each}}
+</main>

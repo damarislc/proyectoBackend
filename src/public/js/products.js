@@ -55,7 +55,13 @@ const createProductCard = () => {
 
 const renderProducts = async () => {
   const data = await getProducts();
+  if (!data.success) {
+    //TODO mostrar msj de error
+    return;
+  }
+
   user = data.user;
+
   data.payload.forEach((product) => {
     /*
     solo el admin puede ver todos los productos aun 
@@ -104,19 +110,26 @@ function addProductToCart(pid) {
         });
       } else if (result.unavailable) {
         Swal.fire({
-          title: "No se puede añadir el producto",
-          text: result.message,
+          title: result.error.name,
+          text: result.error.cause,
           icon: "error",
         });
       } else {
         //sino, se manda un alert de error
         Swal.fire({
-          title: "Error al añadir el producto",
+          title: result.error.name,
           icon: "error",
+          text: result.error.cause,
         });
       }
     })
-    .catch((error) => console.error(error));
+    .catch((error) => {
+      Swal.fire({
+        title: error.name,
+        icon: "error",
+        text: `Error ${error.cause}`,
+      });
+    });
 }
 
 function confirmDelete(pid, title) {
@@ -127,6 +140,7 @@ function confirmDelete(pid, title) {
     },
     buttonsStyling: false,
   });
+
   swalWithBootstrapButtons
     .fire({
       title: `Seguro que quiere eliminar (deshabilitar) el producto con el id: ${pid} y título: ${title}?`,

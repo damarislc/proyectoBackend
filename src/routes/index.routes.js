@@ -4,6 +4,7 @@ import productRoutes from "./api/product.routes.js";
 import sessionRoutes from "./api/sessions.routes.js";
 import viewsRoutes from "./api/views.routes.js";
 import userRoutes from "./api/user.routes.js";
+import errorHandler from "../middlewares/errorHandler.middleware.js";
 
 const router = Router();
 
@@ -16,5 +17,7 @@ router.use("/", viewsRoutes);
 router.use("*", (req, res) => {
   res.status(404).send("Not found");
 });
+
+router.use(errorHandler);
 
 export default router;

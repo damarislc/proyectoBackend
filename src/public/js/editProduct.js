@@ -52,10 +52,11 @@ productForm.addEventListener("submit", (event) => {
           if (result.isConfirmed) window.location.href = "/products";
         });
       } else {
+        let error = result.error.cause ? result.error.cause : result.error;
         Swal.fire({
           title: "Error al actualizar el producto",
           icon: "error",
-          text: result.message,
+          text: error,
         });
       }
     })

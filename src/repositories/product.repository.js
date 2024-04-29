@@ -1,3 +1,6 @@
+import CustomError from "../services/errors/CustomError.js";
+import EErrors from "../services/errors/enums.js";
+
 export default class ProductRepository {
   constructor(dao) {
     this.dao = dao;
@@ -17,69 +20,62 @@ export default class ProductRepository {
     //si el parametro sort contiene un valor, se le asigna al options
     if (params.sort) options.sort = { price: params.sort };
 
-    try {
-      //se llama al método del dao con los filtros y options
-      return await this.dao.gets(filter, options);
-    } catch (error) {
-      return Promise.reject("Error al obtener los productos: " + error);
-    }
+    //se llama al método del dao con los filtros y options
+    return await this.dao.gets(filter, options);
   };
 
   createProduct = async (newProduct) => {
     let productDB = await this.dao.getByCode(newProduct.code);
     //Si el codigo del producto ya existe significa que el prodycto ya existe.
     if (productDB) {
-      return Promise.reject(
-        `El producto con el código "${newProduct.code}" ya existe, no se agregará a la base de datos".`
+      const err = new CustomError(
+        "Error al crear el producto",
+        `El producto con el código "${newProduct.code}" ya existe.`,
+        "Código del producto repetido, no se agregará a la base de datos.",
+        EErrors.INVALID_TYPES_ERROR
       );
+      throw err;
     }
 
-    try {
-      return await this.dao.create(newProduct);
-    } catch (error) {
-      return Promise.reject("Error al crear el producto en la BD: " + error);
-    }
+    return await this.dao.create(newProduct);
   };
 
   getProductById = async (id) => {
-    try {
-      return await this.dao.getById(id);
-    } catch (error) {
-      return Promise.reject(`Error al obtener el producto: ` + error);
-    }
+    return await this.dao.getById(id);
   };
 
   updateProduct = async (id, productUpdated) => {
-    try {
+    //si no se está cambiando el código entonces no requiere más validaciones
+    if (!productUpdated.code) return await this.dao.update(id, productUpdated);
+    let productBefore = await this.dao.getById(id);
+    //Si es el mismo código, no requiere más validaciones
+    if (productBefore.code === productUpdated.code)
       return await this.dao.update(id, productUpdated);
-    } catch (error) {
-      return Promise.reject("Error al actualizar el producto: " + error);
+    //sino, se busca que el nuevo código no exista ya en la base de datos
+    let productDB = await this.dao.getByCode(productUpdated.code);
+    if (productDB) {
+      const err = new CustomError(
+        "Error al actualizar el producto",
+        `El producto con el código "${productUpdated.code}" ya existe.`,
+        "Código del producto repetido, no se modificará el producto.",
+        EErrors.INVALID_TYPES_ERROR
+      );
+      throw err;
     }
+
+    //si no existia, entonces se actualiza el producto
+    return await this.dao.update(id, productUpdated);
   };
 
   deleteProduct = async (id) => {
-    try {
-      return await this.dao.delete(id);
-    } catch (error) {
-      return Promise.reject("Error al eliminar el producto: " + error);
-    }
+    return await this.dao.delete(id);
   };
 
   getProductStock = async (pid) => {
-    try {
-      return await this.dao.getStock(pid);
-    } catch (error) {
-      return Promise.reject("Error al obtener el stock del producto: " + error);
-    }
+    return await this.dao.getStock(pid);
   };
 
   updateProductStock = async (pid, newStock) => {
-    try {
-      return await this.dao.updateStock(pid, newStock);
-    } catch (error) {
-      return Promise.reject(
-        "Error al actualizar el stock del producto: " + error
-      );
-    }
+    return await this.dao.updateStock(pid, newStock);
   };
 }

@@ -14,6 +14,7 @@ const {
   renderCart,
   renderProduct,
   renderCreate,
+  renderProductsMockup,
 } = new ViewsController();
 
 const router = express.Router();
@@ -36,6 +37,9 @@ router.get("/current", passportCall("jwt"), renderCurrent);
 
 //Obtiene los productos desde un fetch de la api de products
 router.get("/products", passportCall("jwt"), renderProducts);
+
+//Mocking route
+router.get("/mockingproducts", passportCall("jwt"), renderProductsMockup);
 
 router.get(
   "/edit/:pid",

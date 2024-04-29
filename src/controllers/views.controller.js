@@ -1,4 +1,5 @@
 import config from "../config/config.js";
+import { products } from "../utils.js";
 import ProductController from "./product.controller.js";
 
 export default class ViewsController {
@@ -45,6 +46,19 @@ export default class ViewsController {
     res.render("products", {
       title: "Listado de productos",
       user,
+    });
+  };
+
+  renderProductsMockup = (req, res) => {
+    if (!req.cookies[config.tokenCookieName]) {
+      return res.redirect("/login");
+    }
+
+    const user = req.user;
+    res.render("productsMockup", {
+      title: "Listado de productos",
+      user,
+      products,
     });
   };
 

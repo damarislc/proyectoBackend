@@ -6,6 +6,9 @@ import config from "./config.js";
 import { createHash, isValidPassword } from "../utils.js";
 import { cartService, userService } from "../services/index.js";
 import UserDTO from "../dto/user.dto.js";
+import CustomError from "../services/errors/CustomError.js";
+import { generateUserErrorInfo } from "../services/errors/info.js";
+import EErrors, { EPassport } from "../services/errors/enums.js";
 
 const ExtractJwt = jwt.ExtractJwt;
 const JwtStrategy = jwt.Strategy;
@@ -44,19 +47,24 @@ const initializePassport = (passport) => {
     "register",
     new LocalStrategy(
       { passReqToCallback: true, usernameField: "email" },
-      async (req, username, password, done) => {
+      async (req, username, password, done, next) => {
         const { name, lastname, email, age } = req.body;
         //si faltan campos, se manda un mensaje de error
         if (!name || !lastname || !email || !age || !password) {
           return done(null, false, {
             message: "Todos los campos son obligatorios",
+            error: EPassport.MISSING_FIELDS,
+            user: { name, lastname, email, age },
           });
         }
 
         try {
           let user = await userService.getUserByEmail(username);
           if (user) {
-            return done(null, false, { message: "El usuario ya existe" });
+            return done(null, false, {
+              message: "El usuario ya existe",
+              error: EPassport.USER_EXISTS,
+            });
           }
 
           const cart = await cartService.createCart();
@@ -77,7 +85,7 @@ const initializePassport = (passport) => {
           const userCreated = await userService.createUser(user);
           return done(null, userCreated);
         } catch (error) {
-          return done(null, false, {
+          return done(error, false, {
             message: "Error en el registro de usuario: " + error,
           });
         }
@@ -93,14 +101,20 @@ const initializePassport = (passport) => {
         try {
           const user = await userService.getUserByEmail(username);
           if (!user) {
-            return done(null, false, { message: "El usuario no existe" });
+            return done(null, false, {
+              message: "El usuario no existe",
+              error: EPassport.USER_NO_EXISTS,
+            });
           }
           if (!isValidPassword(user, password)) {
-            return done(null, false, { message: "Contraseña incorrecta" });
+            return done(null, false, {
+              message: "Contraseña incorrecta",
+              error: EPassport.PASSWORD_INCORRECT,
+            });
           }
           return done(null, user);
         } catch (error) {
-          return done(null, false, { message: "Error en el login: " + error });
+          return done(error, false, { message: "Error en el login: " + error });
         }
       }
     )

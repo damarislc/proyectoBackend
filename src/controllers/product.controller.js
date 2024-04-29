@@ -1,13 +1,16 @@
 import { productService } from "../services/index.js";
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
+import CustomError from "../services/errors/CustomError.js";
+import { generateProductErrorInfo } from "../services/errors/info.js";
+import EErrors from "../services/errors/enums.js";
 
 export default class ProductController {
   constructor() {
     this.productService = productService;
   }
 
-  getProducts = (req, res) => {
+  getProducts = (req, res, next) => {
     //se obtiene los parametros
     let limit = parseInt(req.query.limit);
     let page = parseInt(req.query.page);
@@ -56,15 +59,10 @@ export default class ProductController {
             : null,
         });
       })
-      .catch((error) => {
-        return res.status(500).json({
-          success: false,
-          error: "Error al obtener los productos, " + error,
-        });
-      });
+      .catch((error) => next(error));
   };
 
-  createProduct = (req, res) => {
+  createProduct = (req, res, next) => {
     //Obtiene el json del product desde el body
     const product = req.body;
     if (
@@ -75,11 +73,13 @@ export default class ProductController {
       !product.stock ||
       !product.category
     ) {
-      return res.status(402).send({
-        success: false,
-        message:
-          "Los campos title, description, code, price, stock y category son requeridos.",
-      });
+      const err = new CustomError(
+        "Error creando el producto",
+        generateProductErrorInfo(product),
+        "Error al intentar crear el producto",
+        EErrors.OUT_OF_STOCK
+      );
+      return next(err);
     }
     //Llama el método addProduct para añadir el producto a la colección
     //si la promesa es exitosa manda el resultado
@@ -89,15 +89,12 @@ export default class ProductController {
       .then((result) =>
         res.status(201).send({ success: true, payload: result })
       )
-      .catch((error) =>
-        res.status(500).send({
-          success: false,
-          message: "Error al añadir el producto, " + error,
-        })
-      );
+      .catch((error) => {
+        next(error);
+      });
   };
 
-  getProductById = (req, res) => {
+  getProductById = (req, res, next) => {
     //Obtiene el id del producto desde el params
     const pid = req.params.pid;
     //Llama el método getProductById para obtener el producto según su id
@@ -109,21 +106,19 @@ export default class ProductController {
         if (product) {
           res.status(201).send({ success: true, payload: product });
         } else {
-          res.status(404).send({
-            success: false,
-            message: `El producto con el id ${pid} no existe.`,
-          });
+          const err = new CustomError(
+            "Error buscando el producto",
+            `El producto con el id ${pid} no existe.`,
+            "Error al buscar el producto",
+            EErrors.NOT_FOUND
+          );
+          return next(err);
         }
       })
-      .catch((error) =>
-        res.status(500).send({
-          success: false,
-          message: "Error al obtener el producto, " + error,
-        })
-      );
+      .catch((error) => next(error));
   };
 
-  updateProduct = (req, res) => {
+  updateProduct = (req, res, next) => {
     //Obtiene el id de prodcuto a actualizar y el json de los campos actualizados
     const pid = req.params.pid;
     const product = req.body;
@@ -139,21 +134,19 @@ export default class ProductController {
             payload: product,
           });
         } else {
-          res.status(404).send({
-            success: false,
-            message: `El producto con el id ${pid} no existe.`,
-          });
+          const err = new CustomError(
+            "Error buscando el producto",
+            `El producto con el id ${pid} no existe.`,
+            "Error al buscar el producto",
+            EErrors.NOT_FOUND
+          );
+          return next(err);
         }
       })
-      .catch((error) =>
-        res.status(500).send({
-          success: false,
-          message: "Error al actualizar el producto, " + error,
-        })
-      );
+      .catch((error) => next(error));
   };
 
-  deleteProduct = (req, res) => {
+  deleteProduct = (req, res, next) => {
     //Obtiene el id del producto desde el params
     const pid = req.params.pid;
     //Llama el método deleteProduct con el id del producto a eliminar
@@ -165,17 +158,15 @@ export default class ProductController {
         if (product) {
           res.status(201).send({ success: true, payload: product });
         } else {
-          res.status(404).send({
-            success: false,
-            message: `El producto con el id ${pid} no existe.`,
-          });
+          const err = new CustomError(
+            "Error buscando el producto",
+            `El producto con el id ${pid} no existe.`,
+            "Error al buscar el producto",
+            EErrors.NOT_FOUND
+          );
+          return next(err);
         }
       })
-      .catch((error) =>
-        res.status(500).send({
-          success: false,
-          message: "Error al eliminar el producto, " + error,
-        })
-      );
+      .catch((error) => next(error));
   };
 }

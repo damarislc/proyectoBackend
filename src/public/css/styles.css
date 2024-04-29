@@ -269,3 +269,13 @@
   align-items: center;
   text-align: left;
 }
+
+.mockup-header {
+  text-align: center;
+}
+
+.mocking-products {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
