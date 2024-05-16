@@ -3,7 +3,8 @@ import { passportCall } from "../../utils.js";
 import SessionsController from "../../controllers/sessions.controller.js";
 
 const router = express.Router();
-const { register, login, logout, restore } = new SessionsController();
+const { register, login, logout, restore, forgotPassword, resetPasswordToken } =
+  new SessionsController();
 
 //Ruta para guardar el usuario que se quiere registrar
 router.post("/register", passportCall("register"), register);
@@ -13,6 +14,12 @@ router.post("/login", passportCall("login"), login);
 
 //Ruta para limpiar la cookie al hacer logout
 router.get("/logout", logout);
+
+//Recuperar contraseña
+router.post("/forgot-password", forgotPassword);
+
+//Vista para restaurar contraseña con el token
+router.get("/reset-password/:token", resetPasswordToken);
 
 //Ruta para restaurar la contraseña
 router.post("/restore", restore);

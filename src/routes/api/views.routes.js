@@ -15,6 +15,7 @@ const {
   renderProduct,
   renderCreate,
   renderProductsMockup,
+  renderTokenExpired,
 } = new ViewsController();
 
 const router = express.Router();
@@ -32,6 +33,8 @@ router.get("/login", renderLogin);
 router.get("/register", renderRegister);
 
 router.get("/restore", renderRestore);
+
+router.get("/tokenExpired", renderTokenExpired);
 
 router.get("/current", passportCall("jwt"), renderCurrent);
 

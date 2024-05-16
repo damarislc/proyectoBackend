@@ -35,16 +35,16 @@ form.addEventListener("submit", (event) => {
       } else {
         ////sino, manda un mensaje de error
         Swal.fire({
-          title: "Error al registrarse",
+          title: "Error al restaurar contraseña",
           icon: "error",
-          text: result.error,
+          text: result.message,
         });
       }
     })
     .catch((error) => {
       //si algo salio mal en el fetch, mada un msj de error
       Swal.fire({
-        title: "Error al registrarse",
+        title: "Error al restaurar contraseña",
         icon: "error",
         text: error,
       });

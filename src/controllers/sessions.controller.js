@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 import { userService } from "../services/index.js";
-import { createHash } from "../utils.js";
+import { createHash, isValidPassword } from "../utils.js";
+import { sendMail } from "../utils/sendMail.js";
 
 export default class SessionsController {
   constructor() {
@@ -60,23 +61,104 @@ export default class SessionsController {
     }
   };
 
-  restore = async (req, res) => {
+  forgotPassword = async (req, res) => {
     try {
-      const { email, password } = req.body;
-      if (!email || !password)
-        return res.status(400).send({
-          status: "error",
-          error: "Todos los campos son obligatorios",
-        });
-
+      const { email } = req.body;
       const user = await this.userService.getUserByEmail(email);
-
       if (!user)
         return res
-          .status(401)
-          .send({ status: "error", error: "Usuario incorrecto" });
+          .status(400)
+          .send({ success: false, message: "El usuario no existe" });
+      const userToken = {
+        name: user.name,
+        lastname: user.lastname,
+        email: user.email,
+        age: user.age,
+        role: user.role,
+        cart: user.cart,
+      };
+      req.logger.debug(userToken);
+      //creamos el token
+      const token = jwt.sign(userToken, config.privateKey, {
+        expiresIn: "1h",
+      });
+      const subject = "Restablecer contraseña";
+      const html = `
+                    <p>Hola ${user.name},</p>
+                    <p>Recibimos una solicitud para restablecer tu contraseña.</p>
+                    <p>Si tú no enviaste la solicitud, ignora este mensaje. De lo contrario, puedes restablecer tu constraseña haciendo clic en el siguiente enlace:</p>
+                    <a href="http://localhost:8080/api/sessions/reset-password/${token}">Restablece tu contraseña</a>
+                    <p>El enlace expirará en 1 hora.</p>`;
+      //send mail
+      const mailConfig = {
+        to: user.email,
+        subject,
+        html,
+      };
+      const result = await sendMail(mailConfig);
+      req.logger.info("Correo enviado");
+      return res.status(200).send({
+        success: true,
+        message:
+          "Se ha enviado el enlace de recuperación a su correo electrónico.",
+      });
+    } catch (error) {
+      req.logger.error("Error al restablecer contraseña: " + error);
+      return res.status(500).send({
+        success: false,
+        message: `Error al restablecer contraseña. ${error}`,
+      });
+    }
+  };
 
-      user.password = createHash(password);
+  resetPasswordToken = async (req, res) => {
+    try {
+      const { token } = req.params;
+      const decodedUser = jwt.verify(token, config.privateKey);
+
+      if (!decodedUser) {
+        res.render("tokenExpired", { title: "Token expirado" });
+      }
+
+      res.render("restore", { token, title: "Restaurar contraseña" });
+    } catch (error) {
+      res.render("tokenExpired", { title: "Token expirado" });
+    }
+  };
+
+  restore = async (req, res) => {
+    try {
+      const { passwordNew, passwordConfirm, token } = req.body;
+      if (!passwordNew || !passwordConfirm || passwordNew !== passwordConfirm)
+        return res.status(400).send({
+          success: false,
+          message: "La contraseña no puede estar vacía y deben de coincidir.",
+        });
+
+      const decodedUser = jwt.verify(token, config.privateKey);
+
+      if (!decodedUser)
+        return res.status(400).send({
+          success: false,
+          message: "El token no es válido o ha expirado.",
+        });
+
+      const user = await this.userService.getUserByEmail(decodedUser.email);
+
+      if (!user)
+        return res.status(400).send({
+          success: false,
+          message: "El usuario no existe.",
+        });
+
+      const previousPassword = isValidPassword(user, passwordNew);
+      if (previousPassword)
+        return res.status(400).send({
+          success: false,
+          message: "La contraseña no puede ser la misma que la anterior.",
+        });
+
+      user.password = createHash(passwordNew);
 
       await this.userService.updatePassword(user);
 

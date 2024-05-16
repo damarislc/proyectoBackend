@@ -1,10 +1,11 @@
 <div class="center">
   <div class="form">
     <form id="restore-form">
-      <label for="email">Email:</label>
-      <input type="email" name="email" required />
-      <label for="password">Nueva contraseña:</label>
-      <input type="password" name="password" required />
+      <input type="hidden" name="token" value="{{token}}" />
+      <label for="passwordNew">Nueva contraseña:</label>
+      <input type="password" name="passwordNew" required />
+      <label for="passwordConfirm">Confirmar contraseña:</label>
+      <input type="password" name="passwordConfirm" required />
       <button type="submit">Restaurar</button>
     </form>
   </div>

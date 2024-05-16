@@ -200,7 +200,8 @@
   background-color: #e5e9d48c;
 }
 
-.form button {
+.form button,
+.token-expired button {
   border-radius: 16px;
   background-color: #779ae4b4;
   font-weight: 700;

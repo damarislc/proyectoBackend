@@ -26,6 +26,10 @@ export default class ViewsController {
     res.render("restore");
   };
 
+  renderTokenExpired = (req, res) => {
+    res.render("tokenExpired");
+  };
+
   renderCurrent = (req, res) => {
     if (req.cookies[config.tokenCookieName]) {
       //se manda el usuario que se obtuvo en el passportCall de JWT a la vista current

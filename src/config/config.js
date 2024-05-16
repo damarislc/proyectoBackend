@@ -10,4 +10,10 @@ export default {
   adminPassword: process.env.ADMINPASSWORD,
   privateKey: process.env.PRIVATEKEY,
   tokenCookieName: process.env.TOKENCOOKIENAME,
+  mailing: {
+    SERVICE: process.env.MAILING_SERVICE,
+    HOST: process.env.MAILING_HOST,
+    USER: process.env.MAILING_USER,
+    PASSWORD: process.env.MAILING_PASSWORD,
+  },
 };
