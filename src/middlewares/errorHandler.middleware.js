@@ -20,6 +20,18 @@ export default (error, req, res, next) => {
     case EErrors.DATABASE_ERROR:
       res.status(500).send({ success: false, error });
       break;
+    case EErrors.NO_ACCESS:
+      res.status(400).send({
+        success: false,
+        error,
+      });
+      break;
+    case EErrors.PRODUCT_OWNER:
+      res.status(400).send({
+        success: false,
+        error,
+      });
+      break;
     default:
       res
         .status(500)

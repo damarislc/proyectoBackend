@@ -1,10 +1,11 @@
+import { userService } from "../services/index.js";
 import config from "../config/config.js";
 import { products } from "../utils.js";
-import ProductController from "./product.controller.js";
+import UserDTO from "../dto/user.dto.js";
 
 export default class ViewsController {
   constructor() {
-    this.productController = new ProductController();
+    this.userService = userService;
   }
   renderInicio = (req, res) => {
     res.redirect("/login");
@@ -30,10 +31,28 @@ export default class ViewsController {
     res.render("tokenExpired");
   };
 
-  renderCurrent = (req, res) => {
+  renderCurrent = async (req, res) => {
+    if (req.cookies[config.tokenCookieName]) {
+      const user = await this.userService.getUserByEmail(req.user.email);
+      const userDto = new UserDTO(user);
+      //se manda el usuario que se obtuvo en el passportCall de JWT a la vista current
+      res.render("current", { title: "Perfil de usuario", user: userDto });
+    } else {
+      req.logger.info("Token invalido");
+      res.status(401).json({
+        error: "Invalid jwt",
+      });
+    }
+  };
+
+  renderUpdate = async (req, res) => {
     if (req.cookies[config.tokenCookieName]) {
       //se manda el usuario que se obtuvo en el passportCall de JWT a la vista current
-      res.render("current", { title: "Perfil de usuario", user: req.user });
+      const user = await this.userService.getUserByEmail(req.user.email);
+      res.render("update", {
+        title: "Actualizar role del usuario",
+        user: user,
+      });
     } else {
       req.logger.info("Token invalido");
       res.status(401).json({

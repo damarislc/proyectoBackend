@@ -3,6 +3,8 @@ const EErrors = {
   NOT_FOUND: 2,
   OUT_OF_STOCK: 3,
   DATABASE_ERROR: 4,
+  NO_ACCESS: 5,
+  PRODUCT_OWNER: 6,
 };
 
 export const EPassport = {

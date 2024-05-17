@@ -18,12 +18,12 @@ router.get("/", getProducts);
 router.get("/:pid", getProductById);
 
 //Añadir producto
-router.post("/", handlePolicies("ADMIN"), createProduct);
+router.post("/", handlePolicies(["admin", "premium"]), createProduct);
 
 //Actualizar producto
-router.put("/:pid", handlePolicies("ADMIN"), updateProduct);
+router.put("/:pid", handlePolicies(["admin", "premium"]), updateProduct);
 
 //Eliminar producto
-router.delete("/:pid", handlePolicies("ADMIN"), deleteProduct);
+router.delete("/:pid", handlePolicies(["admin", "premium"]), deleteProduct);
 
 export default router;

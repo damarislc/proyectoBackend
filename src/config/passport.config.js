@@ -6,9 +6,7 @@ import config from "./config.js";
 import { createHash, isValidPassword } from "../utils.js";
 import { cartService, userService } from "../services/index.js";
 import UserDTO from "../dto/user.dto.js";
-import CustomError from "../services/errors/CustomError.js";
-import { generateUserErrorInfo } from "../services/errors/info.js";
-import EErrors, { EPassport } from "../services/errors/enums.js";
+import { EPassport } from "../services/errors/enums.js";
 
 const ExtractJwt = jwt.ExtractJwt;
 const JwtStrategy = jwt.Strategy;
@@ -48,7 +46,7 @@ const initializePassport = (passport) => {
     new LocalStrategy(
       { passReqToCallback: true, usernameField: "email" },
       async (req, username, password, done, next) => {
-        const { name, lastname, email, age } = req.body;
+        const { name, lastname, email, age, premium } = req.body;
         //si faltan campos, se manda un mensaje de error
         if (!name || !lastname || !email || !age || !password) {
           return done(null, false, {
@@ -66,6 +64,7 @@ const initializePassport = (passport) => {
               error: EPassport.USER_EXISTS,
             });
           }
+          console.log("premium=", premium);
 
           const cart = await cartService.createCart();
           user = {
@@ -73,6 +72,7 @@ const initializePassport = (passport) => {
             lastname,
             age,
             email,
+            role: premium ? premium : "user",
             cart: cart._id,
             password: createHash(password),
           };

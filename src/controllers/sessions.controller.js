@@ -20,6 +20,7 @@ export default class SessionsController {
     //Si la autenticacion fue correcta, se crea el token del usuario
     //para ello creamos un objeto con la informacion que queremos almacenar del usuario
     const userToken = {
+      id: req.user._id.toString(),
       name: req.user.name,
       lastname: req.user.lastname,
       email: req.user.email,

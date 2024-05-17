@@ -1,4 +1,4 @@
-import { productService } from "../services/index.js";
+import { productService, userService } from "../services/index.js";
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 import CustomError from "../services/errors/CustomError.js";
@@ -8,9 +8,10 @@ import EErrors from "../services/errors/enums.js";
 export default class ProductController {
   constructor() {
     this.productService = productService;
+    this.userService = userService;
   }
 
-  getProducts = (req, res, next) => {
+  getProducts = async (req, res, next) => {
     //se obtiene los parametros
     let limit = parseInt(req.query.limit);
     let page = parseInt(req.query.page);
@@ -32,8 +33,17 @@ export default class ProductController {
       category,
     };
 
-    const user = jwt.decode(req.cookies[config.tokenCookieName]);
+    //    logger.debug("probando");
 
+    const userToken = jwt.decode(req.cookies[config.tokenCookieName]);
+    console.log("usertoken email=", userToken.email);
+    let user;
+    try {
+      user = await this.userService.getUserByEmail(userToken.email);
+    } catch (error) {
+      req.logger.error(error);
+      return next(error);
+    }
     //Llama el método getProducts
     //si la promesa es exitosa manda el resultado
     //sino manda un mensaje de error
@@ -68,6 +78,7 @@ export default class ProductController {
   createProduct = (req, res, next) => {
     //Obtiene el json del product desde el body
     const product = req.body;
+    const user = jwt.decode(req.cookies[config.tokenCookieName]);
     if (
       !product.title ||
       !product.description ||
@@ -84,6 +95,7 @@ export default class ProductController {
       );
       return next(err);
     }
+    product.owner = user.email;
     //Llama el método addProduct para añadir el producto a la colección
     //si la promesa es exitosa manda el resultado
     //sino manda un mensaje de error
@@ -125,10 +137,28 @@ export default class ProductController {
       });
   };
 
-  updateProduct = (req, res, next) => {
+  updateProduct = async (req, res, next) => {
     //Obtiene el id de prodcuto a actualizar y el json de los campos actualizados
     const pid = req.params.pid;
     const product = req.body;
+
+    const user = jwt.decode(req.cookies[config.tokenCookieName]);
+    //primero se verifica si el usuario puede modificar el producto
+    const userEmail = String(user.email).toLowerCase();
+    if (userEmail !== "admincoder@coder.com") {
+      const productDB = await this.productService.getProductById(pid);
+
+      if (userEmail !== String(productDB.owner).toLowerCase()) {
+        const err = new CustomError(
+          "No se puede actualizar el producto",
+          `No tiene autorización para modificar este producto`,
+          "Error al actualizar el producto",
+          EErrors.NO_ACCESS
+        );
+        return next(err);
+      }
+    }
+
     //Llama el método updateProduct con el id del producto y los nuevos campos
     //si la promesa es exitosa manda el resultado
     //sino manda un mensaje de error
@@ -159,6 +189,24 @@ export default class ProductController {
   deleteProduct = (req, res, next) => {
     //Obtiene el id del producto desde el params
     const pid = req.params.pid;
+
+    const user = jwt.decode(req.cookies[config.tokenCookieName]);
+    //primero se verifica si el usuario puede modificar el producto
+    const userEmail = String(user.email).toLowerCase();
+    if (userEmail !== "admincoder@coder.com") {
+      const productDB = this.productService.getProductById(pid);
+      if (userEmail !== String(productDB.email).toLowerCase()) {
+        req.logger.debug("No tiene autorizacion para eliminar producto");
+        const err = new CustomError(
+          "No se puede actualizar el producto",
+          `No tiene autorización para eliminar este producto`,
+          "Error al actualizar el producto",
+          EErrors.NO_ACCESS
+        );
+        return next(err);
+      }
+    }
+
     //Llama el método deleteProduct con el id del producto a eliminar
     //si la promesa es exitosa manda el resultado
     //sino manda un mensaje de error

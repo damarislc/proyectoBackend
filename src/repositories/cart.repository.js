@@ -15,11 +15,25 @@ export default class CartRepository {
     return await this.cartDao.get(id);
   };
 
-  addProductToCart = async (cid, pid) => {
+  addProductToCart = async (cid, pid, user) => {
     const cart = await this.cartDao.get(cid);
     const productExists = await this.productDao.getById(pid);
+
+    //Si el owner del producto es el mismo que el usuario actual, manda error
+    if (
+      String(productExists.owner).toLowerCase() ===
+      String(user.email).toLowerCase()
+    ) {
+      const err = new CustomError(
+        "Error al añadir el producto al carrito",
+        `No puede añadir un producto del cual es propietario.`,
+        "Se intentó añadir un producto propio.",
+        EErrors.PRODUCT_OWNER
+      );
+      throw err;
+    }
     //Si el carrito no existe manda un mensaje de error
-    if (!cart) {
+    else if (!cart) {
       const err = new CustomError(
         "Error al añadir el producto al carrito",
         `El carrito con el id ${cid} no existe`,

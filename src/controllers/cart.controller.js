@@ -1,6 +1,8 @@
 import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
 import { cartService } from "../services/index.js";
+import jwt from "jsonwebtoken";
+import config from "../config/config.js";
 
 export default class CartController {
   constructor() {
@@ -39,11 +41,13 @@ export default class CartController {
     //Obtiene el id del carrito y del producto desde el params
     const cid = req.params.cid;
     const pid = req.params.pid;
+
+    const user = jwt.decode(req.cookies[config.tokenCookieName]);
     //Llama el método addProductCart para añadir el producto al carrito
     //si la promesa es exitosa manda el resultado
     //sino manda un mensaje de error
     this.cartService
-      .addProductToCart(cid, pid)
+      .addProductToCart(cid, pid, user)
       .then((result) => {
         if (result) res.send({ success: true, payload: result });
         else {

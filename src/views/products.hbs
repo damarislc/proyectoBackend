@@ -1,26 +1,25 @@
 <div id="products-header">
   <div class="first-row">
 
-    <div class="right">
+    {{!-- <div class="right">
       <div class="div-mockup-btn">
         <a href="/mockingproducts">
           <button class="green-btn">Ir a Productos Mockup</button>
         </a>
       </div>
-      {{#if user.isAdmin}}
+      
         <div class="div-createproduct-btn">
           <a href="/create">
             <button class="btn-admin">Crear producto</button>
           </a>
         </div>
-      {{/if}}
-      {{#unless user.isAdmin}}
+     
         <div class="div-chat-btn">
           <a href="/chat">
             <button class="green-btn">Ir al chat</button>
           </a>
         </div>
-      {{/unless}}
+     
       <div class="div-cart-btn">
         <a href="/carts/{{user.cart}}">
           <button class="green-btn">Ir al carrito</button>
@@ -33,11 +32,9 @@
       <div id="div-logout">
         <button onclick="logout()" class="logout">Logout</button>
       </div>
-    </div>
+    </div> --}}
   </div>
-  <p class="welcome">Bienvenido a la tienda
-    {{user.name}}! Soy
-    <span id="user-role">{{user.role}}</span></p>
+  <p class="welcome" id="welcome-message"></p>
   <div class="div-title"><h1>Listado de productos</h1></div>
 </div>
 <div id="products">

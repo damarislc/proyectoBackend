@@ -1,5 +1,3 @@
-import UserDTO from "../dto/user.dto.js";
-
 export default class UserRepository {
   constructor(dao) {
     this.userDao = dao;
@@ -19,5 +17,12 @@ export default class UserRepository {
 
   updatePassword = async (user) => {
     return await this.userDao.updatePassword(user);
+  };
+
+  updateUserRole = async (uid, role) => {
+    const user = await this.userDao.getById(uid);
+    user.role = role;
+
+    return await this.userDao.updateUserRole(user);
   };
 }

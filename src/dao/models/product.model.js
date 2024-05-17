@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
 const productsCollection = "products";
@@ -16,6 +16,7 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, required: true, integer: true },
   category: { type: String, required: true, max: 20, index: true },
   thumbnail: { type: Array, required: false },
+  owner: { type: String, default: "adminCoder@coder.com" },
 });
 
 //se le añade el plugin para el paginate

@@ -7,8 +7,9 @@ export default class UserController {
     this.userService = userService;
   }
 
-  getCurrentUser = (req, res) => {
-    const user = jwt.decode(req.cookies[config.tokenCookieName]);
+  getCurrentUser = async (req, res) => {
+    const userToken = jwt.decode(req.cookies[config.tokenCookieName]);
+    const user = await userService.getUserByEmail(userToken.email);
     res.send(user);
   };
 
@@ -36,5 +37,32 @@ export default class UserController {
       req.logger.error(error);
       next(error);
     }
+  };
+
+  updateUserRole = async (req, res, next) => {
+    const uid = req.params.uid;
+    const { role } = req.body;
+    this.userService
+      .updateUserRole(uid, role)
+      .then((user) => {
+        if (user) {
+          res.status(201).send({
+            success: true,
+            message: "Usuario actualizado correctamante",
+          });
+        } else {
+          const err = new CustomError(
+            "Error actualizando el usuario",
+            `El usuario no existe.`,
+            "Error al buscar el usuario",
+            EErrors.NOT_FOUND
+          );
+          return next(err);
+        }
+      })
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
   };
 }

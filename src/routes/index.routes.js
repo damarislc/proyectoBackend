@@ -6,10 +6,10 @@ import viewsRoutes from "./api/views.routes.js";
 import userRoutes from "./api/user.routes.js";
 import loggerTest from "./api/loggerTest.routes.js";
 import errorHandler from "../middlewares/errorHandler.middleware.js";
-import { addLogger } from "../middlewares/logger.js";
+import { logger } from "../middlewares/logger.js";
 
 const router = Router();
-router.use(addLogger);
+router.use(logger);
 
 //asignacion de routes
 router.use("/api/products", productRoutes);

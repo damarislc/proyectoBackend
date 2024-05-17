@@ -1,5 +1,4 @@
 const productsDiv = document.querySelector("#products");
-let html = "";
 const products = [];
 let user, hasPrevPage, prevLink, page, nextLink, hasNextPage;
 
@@ -11,7 +10,8 @@ const getProducts = async () => {
   return data;
 };
 
-const createProductCard = () => {
+const createProductsCard = () => {
+  let html = "";
   products.forEach((product) => {
     const able = product.status ? "Habilitado" : "Deshabilitado";
     html += `
@@ -42,7 +42,7 @@ const createProductCard = () => {
           carrito</button>
     `;
 
-    if (user.role === "admin") {
+    if (user.role === "admin" || user.role === "premium") {
       html += `<a href="/edit/${product._id}"><button class="btn-admin">Editar</button></a>
               <button class="btn-admin" onclick="confirmDelete('${product._id}', '${product.title}')">Eliminar</button>
             </div>`;
@@ -52,6 +52,8 @@ const createProductCard = () => {
   });
   productsDiv.innerHTML = html;
 };
+
+const editProduct = (pid) => {};
 
 const renderProducts = async () => {
   const data = await getProducts();
@@ -75,8 +77,72 @@ const renderProducts = async () => {
   page = data.page;
   hasNextPage = data.hasNextPage;
   nextLink = data.nextLink;
-  createProductCard();
+  createMenu(user);
+  createWelcomeMessage(user);
+  createProductsCard();
   createPagination();
+  buttonsVisibility(user);
+};
+
+const buttonsVisibility = (user) => {
+  const createProductBtn = document.querySelector(".div-createproduct-btn");
+  const chatBtn = document.querySelector(".div-chat-btn");
+  createProductBtn.style.display = "none";
+  chatBtn.style.display = "none";
+  if (user.role === "user" || user.role === "premium")
+    chatBtn.style.display = "block";
+  if (user.role === "admin" || user.role === "premium")
+    createProductBtn.style.display = "block";
+};
+
+const createMenu = (user) => {
+  const divFirstRow = document.querySelector(".first-row");
+  let html = `
+  <div class="right">
+      <div class="div-mockup-btn">
+        <a href="/mockingproducts">
+          <button class="green-btn">Ir a Productos Mockup</button>
+        </a>
+      </div>
+      
+        <div class="div-createproduct-btn">
+          <a href="/create">
+            <button class="btn-admin">Crear producto</button>
+          </a>
+        </div>
+     
+        <div class="div-chat-btn">
+          <a href="/chat">
+            <button class="green-btn">Ir al chat</button>
+          </a>
+        </div>
+     
+      <div class="div-cart-btn">
+        <a href="/carts/${user.cart}">
+          <button class="green-btn">Ir al carrito</button>
+        </a>
+      </div>
+
+      <div class="div-perfil-btn">
+        <a href="/current"><button class="green-btn">Ir a perfil</button></a>
+      </div>
+      <div id="div-logout">
+        <button onclick="logout()" class="logout">Logout</button>
+      </div>
+    </div>
+  `;
+
+  divFirstRow.innerHTML = html;
+};
+
+const createWelcomeMessage = (user) => {
+  const welcomeMessage = document.querySelector("#welcome-message");
+  const html = `
+    Bienvenido a la tienda
+    ${user.name}! Soy
+    <span id="user-role">${user.role}</span>
+  `;
+  welcomeMessage.innerHTML = html;
 };
 
 renderProducts();
@@ -185,8 +251,10 @@ function deleteProduct(pid) {
         });
       } else {
         //sino, se manda un alert de error
+        console.log("res=", result);
         Swal.fire({
           title: "Error al deshabilitar el producto",
+          text: result.error.cause,
           icon: "error",
         });
       }

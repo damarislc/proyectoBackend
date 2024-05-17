@@ -57,7 +57,7 @@ const logConfigProd = {
 winston.addColors(customLevelOptions.colors);
 
 //const logger = winston.createLogger();
-export const addLogger = (req, res, next) => {
+export const logger = (req, res, next) => {
   const logger =
     environment === "PROD"
       ? createLogger(logConfigProd)

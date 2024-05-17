@@ -1,5 +1,6 @@
 export default class UserDTO {
   constructor(user) {
+    this.id = user.id;
     this.name = user.name;
     this.lastname = user.lastname;
     this.full_name = `${user.name} ${user.lastname}`;

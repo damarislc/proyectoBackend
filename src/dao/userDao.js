@@ -13,6 +13,10 @@ export default class UserDao {
     return await this.userModel.findOne({ email });
   }
 
+  async getById(id) {
+    return await this.userModel.findById(id);
+  }
+
   async create(newUser) {
     return await this.userModel.create(newUser);
   }
@@ -21,6 +25,13 @@ export default class UserDao {
     return await this.userModel.updateOne(
       { email: user.email },
       { password: user.password }
+    );
+  }
+
+  async updateUserRole(user) {
+    return await this.userModel.updateOne(
+      { email: user.email },
+      { role: user.role }
     );
   }
 }

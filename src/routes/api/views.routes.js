@@ -1,7 +1,7 @@
 import express from "express";
 import { passportCall } from "../../utils.js";
 import ViewsController from "../../controllers/views.controller.js";
-import { authorization } from "../../middlewares/authorization.middleware.js";
+import { handlePolicies } from "../../middlewares/authorization.middleware.js";
 
 const {
   renderInicio,
@@ -10,6 +10,7 @@ const {
   renderRegister,
   renderRestore,
   renderCurrent,
+  renderUpdate,
   renderProducts,
   renderCart,
   renderProduct,
@@ -24,7 +25,12 @@ const router = express.Router();
 router.get("/", renderInicio);
 
 //Renderea la página del chat
-router.get("/chat", passportCall("jwt"), authorization("user"), renderChat);
+router.get(
+  "/chat",
+  passportCall("jwt"),
+  handlePolicies(["user", "premium"]),
+  renderChat
+);
 
 //Renderea la pagina de login
 router.get("/login", renderLogin);
@@ -38,6 +44,8 @@ router.get("/tokenExpired", renderTokenExpired);
 
 router.get("/current", passportCall("jwt"), renderCurrent);
 
+router.get("/update/:uid", passportCall("jwt"), renderUpdate);
+
 //Obtiene los productos desde un fetch de la api de products
 router.get("/products", passportCall("jwt"), renderProducts);
 
@@ -47,14 +55,14 @@ router.get("/mockingproducts", passportCall("jwt"), renderProductsMockup);
 router.get(
   "/edit/:pid",
   passportCall("jwt"),
-  authorization("admin"),
+  handlePolicies(["admin", "premium"]),
   renderProduct
 );
 
 router.get(
   "/create",
   passportCall("jwt"),
-  authorization("admin"),
+  handlePolicies(["admin", "premium"]),
   renderCreate
 );
 

@@ -48,7 +48,6 @@ productForm.addEventListener("submit", (event) => {
           showDenyButton: false,
           confirmButtonText: "OK",
         }).then((result) => {
-          //funcoinamiento del boton login, redirige a la pagina de login
           if (result.isConfirmed) window.location.href = "/products";
         });
       } else {

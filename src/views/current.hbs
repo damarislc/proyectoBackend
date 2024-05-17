@@ -9,6 +9,11 @@
     <tr><td>Role:</td><td>{{user.role}}</td></tr>
   </table>
   <div class="perfil-btns">
+    {{#unless user.isAdmin}}
+      <div class="div-update-btn">
+        <a href="/update/{{user.id}}"><button class="green-btn">Actualizar role</button></a>
+      </div>
+    {{/unless}}
     <div class="div-products-btn">
       <a href="/products"><button class="green-btn">Ir a productos</button></a>
     </div>
