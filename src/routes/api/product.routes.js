@@ -9,6 +9,7 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
+  disableProduct,
 } = new ProductController();
 
 //Obtener todos los productos
@@ -25,5 +26,12 @@ router.put("/:pid", handlePolicies(["admin", "premium"]), updateProduct);
 
 //Eliminar producto
 router.delete("/:pid", handlePolicies(["admin", "premium"]), deleteProduct);
+
+//Deshablitar producto
+router.put(
+  "/disable/:pid",
+  handlePolicies(["admin", "premium"]),
+  disableProduct
+);
 
 export default router;

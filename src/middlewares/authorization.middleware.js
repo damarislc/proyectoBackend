@@ -27,3 +27,27 @@ export const handlePolicies = (policies) => (req, res, next) => {
 
   return next();
 };
+
+/**
+ * Crea un token temporal de role premium para probar la api en apidocs
+ * @returns next para ejecutar la siguiente instruccion de la ruta
+ */
+export const apiTemporalToken = () => (req, res, next) => {
+  const userToken = {
+    name: "Test",
+    lastname: "API",
+    email: "test@api.com",
+    role: "premium",
+  };
+
+  const token = jwt.sign(userToken, config.privateKey, { expiresIn: "1h" });
+
+  req.logger.debug("Token creado");
+
+  res.cookie(config.tokenCookieName, token, {
+    maxAge: 60 * 60 * 1000,
+    httpOnly: true,
+  });
+
+  return next();
+};

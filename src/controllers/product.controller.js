@@ -33,10 +33,8 @@ export default class ProductController {
       category,
     };
 
-    //    logger.debug("probando");
-
     const userToken = jwt.decode(req.cookies[config.tokenCookieName]);
-    console.log("usertoken email=", userToken.email);
+
     let user;
     try {
       user = await this.userService.getUserByEmail(userToken.email);
@@ -71,7 +69,7 @@ export default class ProductController {
       })
       .catch((error) => {
         req.logger.error(error);
-        next(error);
+        return next(error);
       });
   };
 
@@ -177,6 +175,7 @@ export default class ProductController {
             "Error al buscar el producto",
             EErrors.NOT_FOUND
           );
+          req.logger.error("Sin permiso para modificar");
           return next(err);
         }
       })
@@ -186,7 +185,7 @@ export default class ProductController {
       });
   };
 
-  deleteProduct = (req, res, next) => {
+  disableProduct = async (req, res, next) => {
     //Obtiene el id del producto desde el params
     const pid = req.params.pid;
 
@@ -194,13 +193,60 @@ export default class ProductController {
     //primero se verifica si el usuario puede modificar el producto
     const userEmail = String(user.email).toLowerCase();
     if (userEmail !== "admincoder@coder.com") {
-      const productDB = this.productService.getProductById(pid);
-      if (userEmail !== String(productDB.email).toLowerCase()) {
+      const productDB = await this.productService.getProductById(pid);
+
+      if (userEmail !== String(productDB.owner).toLowerCase()) {
+        req.logger.debug("No tiene autorizacion para deshabilitar producto");
+        const err = new CustomError(
+          "No se pudo deshabilitar el producto",
+          `No tiene autorización para deshabilitar este producto`,
+          "Error al actualizar el producto",
+          EErrors.NO_ACCESS
+        );
+        return next(err);
+      }
+    }
+
+    //Llama el método deleteProduct con el id del producto a eliminar
+    //si la promesa es exitosa manda el resultado
+    //sino manda un mensaje de error
+    this.productService
+      .disableProduct(pid)
+      .then((product) => {
+        if (product) {
+          res.status(201).send({ success: true, payload: product });
+        } else {
+          const err = new CustomError(
+            "Error buscando el producto",
+            `El producto con el id ${pid} no existe.`,
+            "Error al buscar el producto",
+            EErrors.NOT_FOUND
+          );
+          return next(err);
+        }
+      })
+      .catch((error) => {
+        req.logger.error(error);
+        next(error);
+      });
+  };
+
+  deleteProduct = async (req, res, next) => {
+    //Obtiene el id del producto desde el params
+    const pid = req.params.pid;
+
+    const user = jwt.decode(req.cookies[config.tokenCookieName]);
+    //primero se verifica si el usuario puede modificar el producto
+    const userEmail = String(user.email).toLowerCase();
+    if (userEmail !== "admincoder@coder.com") {
+      const productDB = await this.productService.getProductById(pid);
+
+      if (userEmail !== String(productDB.owner).toLowerCase()) {
         req.logger.debug("No tiene autorizacion para eliminar producto");
         const err = new CustomError(
-          "No se puede actualizar el producto",
+          "No se puedo eliminar el producto",
           `No tiene autorización para eliminar este producto`,
-          "Error al actualizar el producto",
+          "Error al eliminar el producto",
           EErrors.NO_ACCESS
         );
         return next(err);
@@ -214,7 +260,9 @@ export default class ProductController {
       .deleteProduct(pid)
       .then((product) => {
         if (product) {
-          res.status(201).send({ success: true, payload: product });
+          res
+            .status(201)
+            .send({ success: true, deleted: true, payload: product });
         } else {
           const err = new CustomError(
             "Error buscando el producto",

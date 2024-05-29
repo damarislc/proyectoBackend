@@ -1,0 +1,210 @@
+paths:
+  /api/carts/:
+    post:
+      summary: Crea carrito vacío
+      tags:
+        - Carts
+      responses:
+        "201":
+          description: El carrito fue creado satisfactoriamente en la base de datos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmptyCart"
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexión con la base de datos
+  /api/carts/{cid}:
+    get:
+      summary: Obtiene los productos de el carrito especificado
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: El id del carrito a solicitar
+          schema:
+            $type: String
+      responses:
+        "201":
+          description: El carrito fue obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartPopulate"
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexión con la base de datos
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Añadir un producto a un carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: El id del carrito a añadir el producto
+          schema:
+            $type: String
+        - name: pid
+          in: path
+          required: true
+          description: El id del producto a añadir
+          schema:
+            $type: String
+      responses:
+        "201":
+          description: Producto añadido al carrito correctamante
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexión con la base de datos
+    delete:
+      post:
+      summary: Eliminar un producto de un carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: El id del carrito a eliminar el producto
+          schema:
+            $type: String
+        - name: pid
+          in: path
+          required: true
+          description: El id del producto a eliminar
+          schema:
+            $type: String
+      responses:
+        "201":
+          description: Producto se ha borrado del carrito correctamante
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmptyCart"
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexión con la base de datos
+components:
+  schemas:
+    CartPopulate:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado de mongo
+        products:
+          type: array
+          additionalProperties:
+            type: object
+            properties:
+              _id:
+                type: ObjectId
+                description: Id autogenerado de mongo para este objeto
+              productId:
+                type: object
+                description: El producto populado de la colección de productos
+              quantity:
+                type: integer
+                description: La cantidad de este producto en el carrito
+      example:
+        _id: ObjectId("65fca09fc10e0e241f060a88")
+        products:
+          [
+            {
+              productId:
+                {
+                  _id: 66523418f9c6848e3d48e8dc,
+                  title: Cinta métrica,
+                  description: Cinta métrica 5 metros,
+                  code: CM123456,
+                  price: 15,
+                  status: true,
+                  stock: 3,
+                  category: Medición,
+                  thumbnail:
+                    [
+                      "/public/images/imagen1.jpg",
+                      "/public/images/imagen2.jpg",
+                    ],
+                  owner: test@api.com,
+                },
+              quantity: 2,
+              _id: 661079d59d3a84a00d1a1d4c,
+            },
+            {
+              productId:
+                {
+                  _id: 6646961a287a173c7c288084,
+                  title: Navaja Victoriniox,
+                  description: Navaja Victorinox con 5 accesorios,
+                  code: NV123456,
+                  price: 1500,
+                  status: true,
+                  stock: 5,
+                  category: Navaja,
+                  thumbnail:
+                    [
+                      "/public/images/imagen1.jpg",
+                      "/public/images/imagen2.jpg",
+                    ],
+                  owner: test@api.com,
+                },
+              quantity: 1,
+              _id: 661079d59d3a84a00d1a1d4b,
+            },
+          ]
+    EmptyCart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado de mongo
+        products:
+          type: array
+          additionalProperties:
+            type: object
+            properties:
+              _id:
+                type: ObjectId
+              productId:
+                type: ObjectId
+              quantity:
+                type: integer
+      example:
+        _id: ObjectId("65fca09fc10e0e241f060a88")
+        products: []
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado de mongo
+        products:
+          type: array
+          additionalProperties:
+            type: object
+            properties:
+              _id:
+                type: ObjectId
+              productId:
+                type: ObjectId
+              quantity:
+                type: integer
+      example:
+        _id: ObjectId("65fca09fc10e0e241f060a88")
+        products:
+          [
+            {
+              productId: 65da4f7ca54d80247d2b9f8d,
+              quantity: 1,
+              _id: 6657297f9ffd8864e8d7bfd2,
+            },
+          ]

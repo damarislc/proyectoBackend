@@ -44,7 +44,7 @@ const createProductsCard = () => {
 
     if (user.role === "admin" || user.role === "premium") {
       html += `<a href="/edit/${product._id}"><button class="btn-admin">Editar</button></a>
-              <button class="btn-admin" onclick="confirmDelete('${product._id}', '${product.title}')">Eliminar</button>
+              <button class="btn-admin" onclick="confirmDisable('${product._id}', '${product.title}')">Deshabilitar</button>
             </div>`;
     } else {
       html += "</div>";
@@ -198,7 +198,7 @@ function addProductToCart(pid) {
     });
 }
 
-function confirmDelete(pid, title) {
+function confirmDisable(pid, title) {
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
       confirmButton: "btn green-btn",
@@ -209,7 +209,7 @@ function confirmDelete(pid, title) {
 
   swalWithBootstrapButtons
     .fire({
-      title: `Seguro que quiere eliminar (deshabilitar) el producto con el id: ${pid} y título: ${title}?`,
+      title: `Seguro que quiere deshabilitar el producto con el id: ${pid} y título: ${title}?`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Sí",
@@ -218,7 +218,7 @@ function confirmDelete(pid, title) {
     })
     .then((result) => {
       if (result.isConfirmed) {
-        deleteProduct(pid);
+        disableProduct(pid);
       } else if (
         /* Read more about handling dismissals below */
         result.dismiss === Swal.DismissReason.cancel
@@ -232,10 +232,10 @@ function confirmDelete(pid, title) {
     });
 }
 
-function deleteProduct(pid) {
+function disableProduct(pid) {
   //hace un fetch a la api
-  fetch(`/api/products/${pid}`, {
-    method: "DELETE",
+  fetch(`/api/products/disable/${pid}`, {
+    method: "PUT",
   })
     .then((res) => res.json())
     .then((result) => {

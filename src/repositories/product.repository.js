@@ -67,6 +67,10 @@ export default class ProductRepository {
     return await this.dao.update(id, productUpdated);
   };
 
+  disableProduct = async (id) => {
+    return await this.dao.disable(id);
+  };
+
   deleteProduct = async (id) => {
     return await this.dao.delete(id);
   };

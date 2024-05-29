@@ -67,16 +67,20 @@ export default class ProductDao {
 
   /**
    * Cambia de estatus a false del producto según su ID
-   * @param {*} id el ID del producto a eliminar
-   * @returns el producto eliminado
+   * @param {*} id el ID del producto a deshabilitar
+   * @returns el producto deshabilitado
    */
-  async delete(id) {
+  async disable(id) {
     //return this.model.deleteOne({ _id: id });
     return await this.model.findByIdAndUpdate(
       { _id: id },
       { status: false },
       { new: true }
     );
+  }
+
+  async delete(id) {
+    return await this.model.findByIdAndDelete(id);
   }
 
   async getStock(pid) {
