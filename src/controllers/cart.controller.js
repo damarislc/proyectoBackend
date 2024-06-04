@@ -15,7 +15,7 @@ export default class CartController {
     //sino manda un mensaje de error
     this.cartService
       .createCart()
-      .then((cart) => res.send({ success: true, payload: cart }))
+      .then((cart) => res.status(201).send({ success: true, payload: cart }))
       .catch((error) => {
         req.logger.error(error);
         next(error);
@@ -30,7 +30,9 @@ export default class CartController {
     //sino manda un mensaje de error
     this.cartService
       .getCart(cid)
-      .then((result) => res.send({ success: true, payload: result }))
+      .then((result) =>
+        res.status(201).send({ success: true, payload: result })
+      )
       .catch((error) => {
         req.logger.error(error);
         next(error);
@@ -49,7 +51,7 @@ export default class CartController {
     this.cartService
       .addProductToCart(cid, pid, user)
       .then((result) => {
-        if (result) res.send({ success: true, payload: result });
+        if (result) res.status(201).send({ success: true, payload: result });
         else {
           const err = new CustomError(
             "Error al añadir el producto al carrito",
@@ -72,7 +74,9 @@ export default class CartController {
     const pid = req.params.pid;
     this.cartService
       .deleteProductFromCart(cid, pid)
-      .then((result) => res.send({ success: true, payload: result }))
+      .then((result) =>
+        res.status(201).send({ success: true, payload: result })
+      )
       .catch((error) => {
         req.logger.error(error);
         next(error);

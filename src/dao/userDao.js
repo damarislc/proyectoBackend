@@ -34,4 +34,8 @@ export default class UserDao {
       { role: user.role }
     );
   }
+
+  async delete(email) {
+    return await this.userModel.deleteOne({ email: email });
+  }
 }

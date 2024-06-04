@@ -65,4 +65,15 @@ export default class UserController {
         next(error);
       });
   };
+
+  deleteUser = async (req, res, next) => {
+    try {
+      const { email } = req.body;
+      const result = await this.userService.deleteUser(email);
+      res.status(201).send({ success: true, payload: result });
+    } catch (error) {
+      req.logger.error(error);
+      next(error);
+    }
+  };
 }

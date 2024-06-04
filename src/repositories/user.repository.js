@@ -25,4 +25,8 @@ export default class UserRepository {
 
     return await this.userDao.updateUserRole(user);
   };
+
+  deleteUser = async (email) => {
+    return await this.userDao.delete(email);
+  };
 }

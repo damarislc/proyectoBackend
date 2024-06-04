@@ -64,7 +64,6 @@ const initializePassport = (passport) => {
               error: EPassport.USER_EXISTS,
             });
           }
-          console.log("premium=", premium);
 
           const cart = await cartService.createCart();
           user = {
