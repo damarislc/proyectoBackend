@@ -26,6 +26,12 @@ export default (error, req, res, next) => {
         error,
       });
       break;
+    case EErrors.MISSING_FILES:
+      res.status(400).send({
+        success: false,
+        error,
+      });
+      break;
     case EErrors.PRODUCT_OWNER:
       res.status(400).send({
         success: false,

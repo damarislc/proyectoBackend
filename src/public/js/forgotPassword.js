@@ -14,7 +14,6 @@ forgotPasswordButton.addEventListener("click", (e) => {
 
       //introduce al objeto el contenido del form con clave - valor
       obj["email"] = email;
-      console.log(obj);
 
       try {
         const response = await fetch("/api/sessions/forgot-password", {
@@ -37,7 +36,6 @@ forgotPasswordButton.addEventListener("click", (e) => {
     },
     allowOutsideClick: () => !Swal.isLoading(),
   }).then((result) => {
-    console.log("result=", result);
     if (result.isConfirmed) {
       Swal.fire({
         title: result.value.message,

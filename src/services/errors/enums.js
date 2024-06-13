@@ -5,6 +5,7 @@ const EErrors = {
   DATABASE_ERROR: 4,
   NO_ACCESS: 5,
   PRODUCT_OWNER: 6,
+  MISSING_FILES: 7,
 };
 
 export const EPassport = {

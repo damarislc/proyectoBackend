@@ -17,6 +17,7 @@ const {
   renderCreate,
   renderProductsMockup,
   renderTokenExpired,
+  renderUpload,
 } = new ViewsController();
 
 const router = express.Router();
@@ -45,6 +46,8 @@ router.get("/tokenExpired", renderTokenExpired);
 router.get("/current", passportCall("jwt"), renderCurrent);
 
 router.get("/update/:uid", passportCall("jwt"), renderUpdate);
+
+router.get("/uploadDocuments/:uid", passportCall("jwt"), renderUpload);
 
 //Obtiene los productos desde un fetch de la api de products
 router.get("/products", passportCall("jwt"), renderProducts);

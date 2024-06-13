@@ -49,9 +49,25 @@ export default class ViewsController {
     if (req.cookies[config.tokenCookieName]) {
       //se manda el usuario que se obtuvo en el passportCall de JWT a la vista current
       const user = await this.userService.getUserByEmail(req.user.email);
+      const id = user._id.toString();
+
       res.render("update", {
         title: "Actualizar role del usuario",
-        user: user,
+        userId: id,
+      });
+    } else {
+      req.logger.info("Token invalido");
+      res.status(401).json({
+        error: "Invalid jwt",
+      });
+    }
+  };
+
+  renderUpload = (req, res) => {
+    if (req.cookies[config.tokenCookieName]) {
+      res.render("uploadDocuments", {
+        title: "Subir documentos",
+        // user: user,
       });
     } else {
       req.logger.info("Token invalido");

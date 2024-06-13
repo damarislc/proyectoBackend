@@ -251,7 +251,6 @@ function disableProduct(pid) {
         });
       } else {
         //sino, se manda un alert de error
-        console.log("res=", result);
         Swal.fire({
           title: "Error al deshabilitar el producto",
           text: result.error.cause,

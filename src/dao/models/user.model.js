@@ -13,6 +13,15 @@ const userSchema = new mongoose.Schema({
   password: String,
   cart: { type: mongoose.Schema.Types.ObjectId, ref: "carts", required: true },
   role: { type: String, enum: ["admin", "user", "premium"], default: "user" },
+  documents: {
+    type: [
+      {
+        name: String,
+        reference: String,
+      },
+    ],
+  },
+  last_connection: Date,
   /*  isPremium: {
     type: Boolean,
     default: false,

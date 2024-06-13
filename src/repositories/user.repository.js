@@ -7,6 +7,10 @@ export default class UserRepository {
     return await this.userDao.get();
   };
 
+  getUser = async (uid) => {
+    return await this.userDao.getById(uid);
+  };
+
   getUserByEmail = async (email) => {
     return await this.userDao.getBy(email);
   };

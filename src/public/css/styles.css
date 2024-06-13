@@ -280,3 +280,17 @@
   flex-wrap: wrap;
   justify-content: space-evenly;
 }
+
+/**Edit user role**/
+.update-user {
+  width: 250px;
+}
+
+#upload-documents-form {
+  display: flex;
+  flex-direction: column;
+}
+
+#upload-documents-form input {
+  margin-bottom: 15px;
+}
