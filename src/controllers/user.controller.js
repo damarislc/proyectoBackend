@@ -183,7 +183,7 @@ export default class UserController {
 
       res
         .status(200)
-        .send({ succes: true, message: "Usuarios inactivos eliminados" });
+        .send({ success: true, message: "Usuarios inactivos eliminados" });
     } catch (error) {
       res.status(500).send({
         succes: false,

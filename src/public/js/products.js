@@ -88,18 +88,27 @@ const renderProducts = async () => {
 const buttonsVisibility = (user) => {
   const createProductBtn = document.querySelector(".div-createproduct-btn");
   const chatBtn = document.querySelector(".div-chat-btn");
+  const adminUsersBtn = document.querySelector(".div-admin-users-btn");
   createProductBtn.style.display = "none";
   chatBtn.style.display = "none";
+  adminUsersBtn.style.display = "none";
   if (user.role === "user" || user.role === "premium")
     chatBtn.style.display = "block";
   if (user.role === "admin" || user.role === "premium")
     createProductBtn.style.display = "block";
+  if (user.role === "admin") adminUsersBtn.style.display = "block";
 };
 
 const createMenu = (user) => {
   const divFirstRow = document.querySelector(".first-row");
   let html = `
   <div class="right">
+      <div class="div-admin-users-btn">
+        <a href="/usersAdmin">
+          <button class="btn-admin">Administrar usuarios</button>
+        </a>
+      </div>
+
       <div class="div-mockup-btn">
         <a href="/mockingproducts">
           <button class="green-btn">Ir a Productos Mockup</button>
