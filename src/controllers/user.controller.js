@@ -17,8 +17,10 @@ export default class UserController {
   };
 
   getUsers = async (req, res, next) => {
+    console.log("backend, getusers");
     try {
       const users = await this.userService.getUsers();
+      console.log("users=", users);
       res.send(users);
     } catch (error) {
       req.logger.error(error);
