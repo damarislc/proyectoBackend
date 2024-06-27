@@ -1,5 +1,4 @@
 const getUsers = async () => {
-  console.log("dentro del getUsers");
   try {
     const result = await fetch("/api/user/all");
     const users = await result.json();
@@ -62,8 +61,6 @@ const changeRole = (id, email, role) => {
 };
 
 const changeRoleFetch = (user, newRole) => {
-  console.log(user);
-  console.log("id=", user.id);
   const obj = { role: newRole };
   fetch(`/api/user/premium/${user.id}`, {
     method: "PUT",
