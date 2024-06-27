@@ -178,7 +178,6 @@ export default class UserController {
           await this.userService.deleteUser(user.email);
         }
       });
-      console.log("InactiveUsers=", inactiveUsers);
       this.emailInactives(req, inactiveUsers);
 
       res
