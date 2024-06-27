@@ -16,7 +16,7 @@ export default class SessionsController {
     });
   };
 
-  login = (req, res, next) => {
+  login = async (req, res, next) => {
     //Si la autenticacion fue correcta, se crea el token del usuario
     //para ello creamos un objeto con la informacion que queremos almacenar del usuario
     const userToken = {
@@ -33,6 +33,10 @@ export default class SessionsController {
       expiresIn: "24h",
     });
 
+    let user = await userService.updateUserConnection(req.user._id);
+    const date = new Date();
+    let connection = date.toLocaleString(user.last_connection);
+    req.logger.info(`User last connection: ${connection}`);
     req.logger.debug("Token creado");
 
     //guardamos el token en una cookie con httpOnly true y mandamos la respuesta
@@ -46,8 +50,14 @@ export default class SessionsController {
       });
   };
 
-  logout = (req, res) => {
+  logout = async (req, res) => {
     if (req.cookies[config.tokenCookieName]) {
+      const userToken = jwt.decode(req.cookies[config.tokenCookieName]);
+      let user = await userService.updateUserConnection(userToken.id);
+      const date = new Date();
+      let connection = date.toLocaleString(user.last_connection);
+      req.logger.info(`User last connection: ${connection}`);
+
       res.clearCookie(config.tokenCookieName).status(200).json({
         success: true,
         message: "You have logged out",

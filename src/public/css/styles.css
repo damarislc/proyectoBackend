@@ -46,6 +46,13 @@
   cursor: pointer;
 }
 
+.btn-admin.green {
+  background: #09aa3a;
+}
+.btn-admin.gray {
+  background: #333333;
+}
+
 .logout {
   margin: 12px;
   background: #9c8673;
@@ -293,4 +300,9 @@
 
 #upload-documents-form input {
   margin-bottom: 15px;
+}
+
+.delete-user {
+  border: none;
+  background-color: transparent;
 }

@@ -135,4 +135,13 @@ export default class ViewsController {
       title: "Mi carrito",
     });
   };
+
+  renderUsersAdmin = (req, res) => {
+    if (!req.cookies[config.tokenCookieName]) {
+      req.logger.info("Token invalido");
+      return res.redirect("/login");
+    }
+
+    res.render("usersAdmin", { title: "Administrar usuarios" });
+  };
 }

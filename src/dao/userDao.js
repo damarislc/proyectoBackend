@@ -6,7 +6,9 @@ export default class UserDao {
   }
 
   async get() {
-    return await this.userModel.find();
+    return await this.userModel
+      .find()
+      .select(["name", "lastname", "email", "role", "last_connection"]);
   }
 
   async getBy(email) {
@@ -35,7 +37,21 @@ export default class UserDao {
     );
   }
 
+  async updateUserConnection(uid) {
+    const date = Date.now();
+
+    return await this.userModel.findOneAndUpdate(
+      { _id: uid },
+      { last_connection: date },
+      { new: true }
+    );
+  }
+
   async delete(email) {
     return await this.userModel.deleteOne({ email: email });
+  }
+
+  async deleteInactives(users) {
+    return await this.userModel.deleteMany(users);
   }
 }

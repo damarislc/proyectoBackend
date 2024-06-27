@@ -43,8 +43,9 @@ const createProductsCard = () => {
     `;
 
     if (user.role === "admin" || user.role === "premium") {
-      html += `<a href="/edit/${product._id}"><button class="btn-admin">Editar</button></a>
-              <button class="btn-admin" onclick="confirmDisable('${product._id}', '${product.title}')">Deshabilitar</button>
+      html += `<a href="/edit/${product._id}"><button class="btn-admin green">Editar</button></a>
+              <button class="btn-admin gray" onclick="confirmDisable('${product._id}', '${product.title}')">Deshabilitar</button>
+              <button class="btn-admin" onclick="confirmDelete('${product._id}', '${product.title}')">Eliminar</button>
             </div>`;
     } else {
       html += "</div>";
@@ -259,6 +260,76 @@ function disableProduct(pid) {
       }
     })
     .catch((error) => console.error(error));
+}
+
+function confirmDelete(pid, title) {
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: "btn green-btn",
+      cancelButton: "btn red-btn",
+    },
+    buttonsStyling: false,
+  });
+
+  swalWithBootstrapButtons
+    .fire({
+      title: `Seguro que quiere eliminar el producto con el id: ${pid} y título: ${title}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí",
+      cancelButtonText: "No",
+      reverseButtons: true,
+    })
+    .then((result) => {
+      if (result.isConfirmed) {
+        deleteProduct(pid);
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire({
+          title: "Cancelado",
+          text: "El producto no se ha eliminado.",
+          icon: "error",
+        });
+      }
+    });
+}
+
+function deleteProduct(pid) {
+  //hace un fetch a la api
+  fetch(`/api/products/${pid}`, {
+    method: "DELETE",
+  })
+    .then((res) => res.json())
+    .then((result) => {
+      if (result.success) {
+        Swal.fire({
+          title: "Producto se ha eliminado correctamente",
+          icon: "success",
+          showDenyButton: false,
+          confirmButtonText: "OK",
+        }).then((result) => {
+          //recarga la pagina
+          if (result.isConfirmed) location.reload();
+        });
+      } else {
+        //sino, se manda un alert de error
+        Swal.fire({
+          title: "Error al eliminar el producto",
+          text: result.error.cause,
+          icon: "error",
+        });
+      }
+    })
+    .catch((error) => {
+      //sino, se manda un alert de error
+      Swal.fire({
+        title: "Error al eliminar el producto",
+        text: error,
+        icon: "error",
+      });
+    });
 }
 
 function createPagination() {

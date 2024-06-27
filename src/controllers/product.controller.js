@@ -4,6 +4,7 @@ import config from "../config/config.js";
 import CustomError from "../services/errors/CustomError.js";
 import { generateProductErrorInfo } from "../services/errors/info.js";
 import EErrors from "../services/errors/enums.js";
+import { sendMail } from "../utils/sendMail.js";
 
 export default class ProductController {
   constructor() {
@@ -260,6 +261,11 @@ export default class ProductController {
       .deleteProduct(pid)
       .then((product) => {
         if (product) {
+          const productContent = {
+            title: product.title,
+            email: product.owner,
+          };
+          this.emailUserDeletedProduct(req, productContent);
           res
             .status(201)
             .send({ success: true, deleted: true, payload: product });
@@ -277,5 +283,25 @@ export default class ProductController {
         req.logger.error(error);
         next(error);
       });
+  };
+
+  emailUserDeletedProduct = async (req, productContent) => {
+    const subject = `Su producto ${productContent.title} ha sido eliminado`;
+    const html = `
+    <p>Hola,</p> 
+    <p>Su producto ${productContent.title} ha sido eliminado de la tienda.</p>
+    <p>Si usted no ha eliminado el producto o necesita una aclaración de porque se ha eliminado, favor de mandar correo a <a href="mailto:help@api.com">Servicio al cliente</a></p>
+    <p>Attentamente: El admin</p> `;
+    const mailConfig = {
+      to: productContent.email,
+      subject,
+      html,
+    };
+    try {
+      const result = await sendMail(mailConfig);
+      req.logger.info("Correo enviado");
+    } catch (error) {
+      req.logger.error("Error al enviar el correo: " + error);
+    }
   };
 }

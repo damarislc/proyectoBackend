@@ -30,7 +30,15 @@ export default class UserRepository {
     return await this.userDao.updateUserRole(user);
   };
 
+  updateUserConnection = async (uid) => {
+    return await this.userDao.updateUserConnection(uid);
+  };
+
   deleteUser = async (email) => {
     return await this.userDao.delete(email);
+  };
+
+  deleteInactives = async (users) => {
+    return await this.userDao.deleteInactives(users);
   };
 }

@@ -18,6 +18,7 @@ const {
   renderProductsMockup,
   renderTokenExpired,
   renderUpload,
+  renderUsersAdmin,
 } = new ViewsController();
 
 const router = express.Router();
@@ -71,5 +72,12 @@ router.get(
 
 //obtiene el carrito desde un fetch de la api de carts
 router.get("/carts/:cid", passportCall("jwt"), renderCart);
+
+router.get(
+  "/usersAdmin",
+  passportCall("jwt"),
+  handlePolicies(["admin"]),
+  renderUsersAdmin
+);
 
 export default router;

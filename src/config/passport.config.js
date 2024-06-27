@@ -71,7 +71,6 @@ const initializePassport = (passport) => {
             lastname,
             age,
             email,
-            role: premium ? premium : "user",
             cart: cart._id,
             password: createHash(password),
           };

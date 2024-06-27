@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
+import { sendMail } from "../utils/sendMail.js";
 
 export default class UserController {
   constructor() {
@@ -141,5 +142,75 @@ export default class UserController {
       req.logger.error(error);
       next(error);
     }
+  };
+
+  /**
+   * Borra los usuarios inactivos
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   */
+  deleteInactives = async (req, res, next) => {
+    try {
+      //Obtiene todos los usuarios
+      const users = await this.userService.getUsers();
+      //arreglo en el que se iran guardando los usuarios inactivos
+      const inactiveUsers = [];
+      //Por cada uno de los usuarios obtenidos se compara la fecha de conexion
+      users.forEach(async (user) => {
+        const date = new Date();
+        let date1 = date.getTime();
+        //Si no tiene una ultima conexion porque no se ha logueado, se pasa al siguiente
+        if (!user.last_connection || user.email === "adminCoder@coder.com")
+          return;
+        //se obtiene la ultima conexion del usuario
+        let date2 = user.last_connection.getTime();
+
+        let difference_in_time = date1 - date2;
+        //se obtiene la diferencia en min por cuestion de testing
+        let difference_in_days = Math.round(
+          difference_in_time / (1000 * 60) //(1000 * 36000 * 24)
+        );
+
+        //Para testing, el tiempo de espera es de 30 min de inactividad
+        if (difference_in_days > 30) {
+          inactiveUsers.push(user);
+          await this.userService.deleteUser(user.email);
+        }
+      });
+      console.log("InactiveUsers=", inactiveUsers);
+      this.emailInactives(req, inactiveUsers);
+
+      res
+        .status(200)
+        .send({ succes: true, message: "Usuarios inactivos eliminados" });
+    } catch (error) {
+      res.status(500).send({
+        succes: false,
+        error: "Error al eliminar los usuarios inactivos. " + error,
+      });
+    }
+  };
+
+  emailInactives = (req, inactiveUsers) => {
+    const subject = "Usuario eliminado por inactividad";
+    inactiveUsers.forEach(async (user) => {
+      const html = `
+                  <p>Hola ${user.name}</p>
+                  <p>Su usario con el email ${user.email} ha sido eliminado de la aplicación debido a su inactividad.</p>
+                  <p>Disculpe las molestias que esto pueda ocasionar, si quieire seguir haciendo uso de la plataforma, favor de registrase nuevamente.</p>
+                  <p>Attentamente: La administación</p>`;
+      const mailConfig = {
+        to: user.email,
+        subject,
+        html,
+      };
+      try {
+        const result = await sendMail(mailConfig);
+        req.logger.info("Correo enviado");
+      } catch (error) {
+        req.logger.error("Error al enviar el correo: " + error);
+      }
+    });
   };
 }
