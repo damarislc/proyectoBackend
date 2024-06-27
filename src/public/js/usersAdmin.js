@@ -3,7 +3,6 @@ const getUsers = async () => {
   try {
     const result = await fetch("/api/user/all");
     const users = await result.json();
-    console.log("users=", users);
     return users;
   } catch (error) {
     Swal.fire({
@@ -16,13 +15,11 @@ const getUsers = async () => {
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
-  console.log("dentro del listener");
   const usersTable = document.querySelector("#users-table .users");
   usersTable.innerHTML = "";
   const users = await getUsers();
 
   users.forEach((user) => {
-    console.log("en el foreach, user=", user);
     if (user.email === "adminCoder@coder.com") return;
     let localDate = new Date(user.last_connection);
     const userRow = `<tr>
