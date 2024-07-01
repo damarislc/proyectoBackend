@@ -94,11 +94,13 @@ export default class SessionsController {
         expiresIn: "1h",
       });
       const subject = "Restablecer contraseña";
+      const railwayDomain = process.env.RAILWAY_PUBLIC_DOMAIN;
+      const url = railwayDomain ? railwayDomain : config.URL;
       const html = `
                     <p>Hola ${user.name},</p>
                     <p>Recibimos una solicitud para restablecer tu contraseña.</p>
                     <p>Si tú no enviaste la solicitud, ignora este mensaje. De lo contrario, puedes restablecer tu constraseña haciendo clic en el siguiente enlace:</p>
-                    <a href="http://localhost:8080/api/sessions/reset-password/${token}">Restablece tu contraseña</a>
+                    <a href="${url}/api/sessions/reset-password/${token}">Restablece tu contraseña</a>
                     <p>El enlace expirará en 1 hora.</p>`;
       //send mail
       const mailConfig = {
