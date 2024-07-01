@@ -31,7 +31,7 @@ const createProductsCard = () => {
         <span>Categoría</span>
         <p>${product.category}</p>
         `;
-    if (user.role === "admin") {
+    if (user.role === "admin" || product.owner === user.email) {
       html += `<div class="status">
                 <span>Estatus</span>
                 <p>${able}</p>
@@ -70,7 +70,8 @@ const renderProducts = async () => {
     solo el admin puede ver todos los productos aun 
     cuando el estatus esta en false*/
     if (user.role === "admin") products.push(product);
-    else if (product.status) products.push(product);
+    else if (product.status || product.owner === user.email)
+      products.push(product);
   });
 
   hasPrevPage = data.hasPrevPage;
