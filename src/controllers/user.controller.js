@@ -66,18 +66,26 @@ export default class UserController {
       .updateUserRole(uid, role)
       .then((user) => {
         if (user) {
-          //se actualiza el token y la cookie con el nuevo role
-          const newToken = this.updateToken(user);
-          res
-            .cookie(config.tokenCookieName, newToken, {
-              maxAge: 60 * 60 * 1000 * 24,
-              httpOnly: true,
-            })
-            .status(201)
-            .send({
+          const currentUser = jwt.decode(req.cookies[config.tokenCookieName]);
+          if (currentUser.role === "admin") {
+            res.status(201).send({
               success: true,
               message: "Usuario actualizado correctamante",
             });
+          } else {
+            //se actualiza el token y la cookie con el nuevo role
+            const newToken = this.updateToken(user);
+            res
+              .cookie(config.tokenCookieName, newToken, {
+                maxAge: 60 * 60 * 1000 * 24,
+                httpOnly: true,
+              })
+              .status(201)
+              .send({
+                success: true,
+                message: "Usuario actualizado correctamante",
+              });
+          }
         } else {
           const err = new CustomError(
             "Error actualizando el usuario",
