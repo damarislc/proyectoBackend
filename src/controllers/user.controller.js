@@ -66,10 +66,18 @@ export default class UserController {
       .updateUserRole(uid, role)
       .then((user) => {
         if (user) {
-          res.status(201).send({
-            success: true,
-            message: "Usuario actualizado correctamante",
-          });
+          //se actualiza el token y la cookie con el nuevo role
+          const newToken = this.updateToken(user);
+          res
+            .cookie(config.tokenCookieName, newToken, {
+              maxAge: 60 * 60 * 1000 * 24,
+              httpOnly: true,
+            })
+            .status(201)
+            .send({
+              success: true,
+              message: "Usuario actualizado correctamante",
+            });
         } else {
           const err = new CustomError(
             "Error actualizando el usuario",
@@ -84,6 +92,22 @@ export default class UserController {
         req.logger.error(error);
         next(error);
       });
+  };
+
+  updateToken = (user) => {
+    const userToken = {
+      id: user._id.toString(),
+      name: user.name,
+      lastname: user.lastname,
+      email: user.email,
+      age: user.age,
+      role: user.role,
+      cart: user.cart,
+    };
+    //creamos el token
+    return jwt.sign(userToken, config.privateKey, {
+      expiresIn: "24h",
+    });
   };
 
   uploadDocuments = async (req, res, next) => {

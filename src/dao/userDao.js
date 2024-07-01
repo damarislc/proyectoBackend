@@ -31,9 +31,10 @@ export default class UserDao {
   }
 
   async updateUserRole(user) {
-    return await this.userModel.updateOne(
+    return await this.userModel.findOneAndUpdate(
       { email: user.email },
-      { role: user.role }
+      { role: user.role },
+      { new: true }
     );
   }
 
