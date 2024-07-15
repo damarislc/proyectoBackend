@@ -210,7 +210,7 @@ http://localhost:8080/login
 
 La vista de login cuenta con un formulario con email y contraseña. Ademas contiene un link para ir a la pagina de registro por si deseas registrarte.
 
-![Vista de login](https://res.cloudinary.com/doxztm7ed/image/upload/v1711399092/Backend/Readme/Captura_de_pantalla_2024-03-25_163801_sqpccg.png)
+![Vista de login](https://res.cloudinary.com/doxztm7ed/image/upload/v1721069198/Backend/Readme/Captura_de_pantalla_2024-07-15_144607_ekoelr.png)
 
 ### Vista de productos
 
@@ -287,4 +287,4 @@ Y se actualiza el carrito dejando solo el/los productos que no se pudieron compr
 ### Vista de Perfil
 
 Esta contiene la información del usuario registrado.
-![Perfil](https://res.cloudinary.com/doxztm7ed/image/upload/v1711400198/Backend/Readme/Captura_de_pantalla_2024-03-25_165631_vfldmu.png)
+![Perfil](https://res.cloudinary.com/doxztm7ed/image/upload/v1721069468/Backend/Readme/Captura_de_pantalla_2024-07-15_145056_hvrutl.png)
